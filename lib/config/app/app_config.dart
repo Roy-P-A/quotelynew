@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/foundation.dart';
 import '../../flavors.dart';
 
@@ -55,7 +54,7 @@ class QTAppConfig {
 class QTAppConfigManager {
   static QTAppConfig _getDevConfig() {
     return QTAppConfig(
-        backendBaseURL: "192.168.1.59:4321",
+        backendBaseURL: "192.168.29.159:4321",
         serviceUrl: "quotely-service",
         httpScheme: "http",
         //firebaseoptions
@@ -129,6 +128,5 @@ class QTAppConfigManager {
     }
     return config;
   }
-
   static QTAppConfig get config => _instance;
 }

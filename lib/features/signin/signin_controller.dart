@@ -36,13 +36,13 @@ class SignInController extends GetxController with SnackbarMixin {
   @override
   void onInit() async {
     checkInternetConnection();
-    // Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
-    //   if (result == ConnectivityResult.none) {
-    //     isConnected.value = false;
-    //   } else {
-    //     isConnected.value = true;
-    //   }
-    // });
+    Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
+      if (result == ConnectivityResult.none) {
+        isConnected.value = false;
+      } else {
+        isConnected.value = true;
+      }
+    });
     await loadUserDataFromSharedPreferences();
     super.onInit();
   }
@@ -216,12 +216,11 @@ class SignInController extends GetxController with SnackbarMixin {
 
       final GoogleSignInAuthentication gAuth = await gUser!.authentication;
 
-      final OAuthCredential credential = GoogleAuthProvider.credential(
+      final AuthCredential credential = GoogleAuthProvider.credential(
         accessToken: gAuth.accessToken,
         idToken: gAuth.idToken,
       );
 
-// finally, lets ssign in
       final UserCredential userCredential =
           await FirebaseAuth.instance.signInWithCredential(credential);
       final User? user = userCredential.user;
@@ -279,152 +278,6 @@ class SignInController extends GetxController with SnackbarMixin {
 //     debugPrint("Firebase authentication error: ${error.message}");
 //   } catch (error) {
 //     debugPrint("Unexpected error during Google Sign-In: $error");
-//   }
-// }
-
-  // signInWithGoogle() async {
-  //   final FirebaseAuth _auth = FirebaseAuth.instance;
-  //   // final GoogleSignIn _googleSignIn = GoogleSignIn(
-  //   //     clientId:
-  //   //         "258869472088-drooevp8e6sts8tf7jkh3k41sotr5tgt.apps.googleusercontent.com");
-  //   final GoogleSignIn _googleSignIn = GoogleSignIn(
-  //       clientId:
-  //           "258869472088-drooevp8e6sts8tf7jkh3k41sotr5tgt.apps.googleusercontent.com");
-  //   try {
-  //     final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
-
-  //     debugPrint(googleUser.toString());
-
-  //     if (googleUser == null) {
-  //       // User canceled the sign-in process
-  //       return;
-  //     }
-
-  //     final GoogleSignInAuthentication googleAuth =
-  //         await googleUser.authentication;
-
-  //     debugPrint(googleAuth.idToken);
-  //     final AuthCredential credential = GoogleAuthProvider.credential(
-  //       accessToken: googleAuth.accessToken,
-  //       idToken: googleAuth.idToken,
-  //     );
-
-  //     //await _auth.signInWithCredential(credential);
-  //     debugPrint("toor");
-  //     final UserCredential userCredential = await _auth.signInWithCredential(credential);
-  //     debugPrint(userCredential.toString());
-  //     final User? user = userCredential.user;
-
-  //     if (user != null) {
-  //       // User signed in successfully
-  //       // Perform any additional actions (e.g., navigate to home screen)
-  //       debugPrint("tumb");
-  //         showErrorSnackbar(
-  //         title: "Success", message: "Please successon");
-  //     await Future.delayed(const Duration(seconds: 2));
-  //     }
-  //   } catch (error) {
-  //     debugPrint("tim");
-  //       showErrorSnackbar(
-  //         title: "Fail", message: "Fail");
-  //     await Future.delayed(const Duration(seconds: 2));
-  //   }
-  // }
-// Future<void> signInWithGoogle() async {
-//   try {
-//     // Sign in with Google
-//     final GoogleSignInAccount? googleSignInAccount = await _googleSignIn.signIn();
-//     if (googleSignInAccount == null) return; // User cancelled sign-in
-
-//     // Get authentication details
-//     final GoogleSignInAuthentication googleSignInAuthentication =
-//         await googleSignInAccount.authentication;
-
-//     // Create Firebase credential
-//     final AuthCredential credential = GoogleAuthProvider.credential(
-//       accessToken: googleSignInAuthentication.accessToken,
-//       idToken: googleSignInAuthentication.idToken,
-//     );
-
-//     // Sign in with Firebase
-//     final UserCredential userCredential = await _auth.signInWithProvider(GoogleAuthProvider());
-
-//     // Get the signed-in user
-//     // final User? user = userCredential.user;
-
-//     // if (user != null) {
-//     //   debugPrint("User signed in successfully!");
-//     //   showErrorSnackbar(title: "Success", message: "Signed in successfully!");
-//     //   // Perform additional actions based on the signed-in user (e.g., navigate to a user profile screen)
-//     // }
-//   } on FirebaseAuthException catch (e) {
-//     debugPrint(e.message);
-//     String message = "An error occurred during sign-in";
-//     switch (e.code) {
-//       case "account-exists-with-different-credential":
-//         message = "The email address is already in use with a different account.";
-//         break;
-//       case "invalid-credential":
-//         message = "The provided credential is invalid.";
-//         break;
-//       // Handle other common error codes (refer to Firebase documentation)
-//       default:
-//         break;
-//     }
-//     showErrorSnackbar(title: "Error", message: message);
-//     throw e; // Re-throw for further handling if needed
-//   }
-// }
-
-//   signInWithGoogle() async {
-//     GoogleSignInAccount googleSignInAccount = await googleSignIn.signIn();
-// GoogleSignInAuthentication gSA = await googleSignInAccount.authentication;
-
-// FirebaseUser user = await auth.signInWithGoogle(
-//     idToken: gSA.idToken, accessToken: gSA.accessToken);
-
-//   }
-
-// signInWithGoogle() async {
-//   try{
-//     GoogleAuthProvider _googleAuthProvider = GoogleAuthProvider();
-//    final  manu  = await FirebaseAuth.instance.signInWithProvider(_googleAuthProvider) as int;
-//    debugPrint(manu.toString());
-
-//   }catch(error){
-//     debugPrint("Fail");
-//     debugPrint(error.toString());
-//   }
-
-// }
-
-// Future<void> signInWithGoogle() async {
-//   final GoogleSignIn googleSignIn = GoogleSignIn();
-//   final GoogleSignInAccount? account = await googleSignIn.signIn();
-
-//   if (account != null) {
-//     final GoogleSignInAuthentication authentication = await account.authentication;
-//     final String? idToken = authentication.idToken;
-
-//     // Process the ID token or other user data (example with potential type mismatch)
-//     final GoogleSignInProfile? userProfile = await googleSignIn.getUserProfile();
-//     List<dynamic>? userData = userProfile?.data;  // Handle potential null userProfile
-
-//     if (userData != null) {
-//       try {
-//         List<int?> integerList = userData.whereType<int>().toList();
-//         int? specificValue = userData['fieldName'] as int?; // Access specific field
-
-//         // Use the data after type checks
-//         print(integerList);
-//         print(specificValue);
-//       } on CastError catch (e) {
-//         print('Error casting data: $e');
-//         // Handle the error appropriately, e.g., display an error message or use default values
-//       }
-//     }
-//   } else {
-//     print('Sign-in cancelled');
 //   }
 // }
 

@@ -1,0 +1,62 @@
+{
+  "project_info": {
+    "project_number": "258869472088",
+    "project_id": "quotely-7f787",
+    "storage_bucket": "quotely-7f787.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:258869472088:android:c7601f922d1128c5c1d32d",
+        "android_client_info": {
+          "package_name": "com.nintriva.quotely"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "258869472088-okq23b779lmvvgj2b6enck0h2mi5tes5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.nintriva.quotely",
+            "certificate_hash": "22cef1113887fea7a0f0d0b872654712d9c63bbb"
+          }
+        },
+        {
+          "client_id": "258869472088-vfok8kof15mi8gi5o9uo1augja461jtp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.nintriva.quotely",
+            "certificate_hash": "801fa31c64dd87be84e5181ff5416f983e603eb3"
+          }
+        },
+        {
+          "client_id": "258869472088-2hjmbvfqnaov813lkr65vspvp1ol0qus.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD4KVafXdlBUqDeBeJ7ZBZMohtXnIutgTc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "258869472088-2hjmbvfqnaov813lkr65vspvp1ol0qus.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "258869472088-jt9b03p0v2r4u7pu3vt7hbuvcont24ns.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.nintriva.quotely"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
