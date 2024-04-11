@@ -1,0 +1,134 @@
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
+import '../../flavors.dart';
+
+@immutable
+class QTAppConfig {
+  final String backendBaseURL;
+  final String serviceUrl;
+  final String httpScheme;
+
+  //default section
+  final String defaultfirstName;
+  final String defaultlastName;
+  final String defaultemail;
+  final String defaultrole;
+  final String defaultapikey;
+  final String defaultpaymentEndDate;
+  final String defaultuserId;
+  //Firebaseoptions
+  final String fireBaseApiKey;
+  final String firebaseappId;
+  final String firebasemessagingSenderId;
+  final String firebaseprojectId;
+
+  //default section1
+  final int defaultbackgroundimageId;
+  final int defaultfontfamilyId;
+  final int defaultfontColorId;
+
+  const QTAppConfig(
+      {required this.backendBaseURL,
+      required this.serviceUrl,
+      required this.httpScheme,
+      //firebaseoptions
+      required this.fireBaseApiKey,
+      required this.firebaseappId,
+      required this.firebasemessagingSenderId,
+      required this.firebaseprojectId,
+
+      //default section
+      required this.defaultfirstName,
+      required this.defaultlastName,
+      required this.defaultemail,
+      required this.defaultrole,
+      required this.defaultapikey,
+      required this.defaultpaymentEndDate,
+      required this.defaultuserId,
+      //default section1
+      required this.defaultbackgroundimageId,
+      required this.defaultfontfamilyId,
+      required this.defaultfontColorId});
+}
+
+class QTAppConfigManager {
+  static QTAppConfig _getDevConfig() {
+    return QTAppConfig(
+        backendBaseURL: "192.168.1.59:4321",
+        serviceUrl: "quotely-service",
+        httpScheme: "http",
+        //firebaseoptions
+        fireBaseApiKey: Platform.isIOS
+            ? "AIzaSyBoLrgx8dttwP1wxXZFXzbtaMJnj8iFyF8"
+            : "AIzaSyD4KVafXdlBUqDeBeJ7ZBZMohtXnIutgTc",
+        firebaseappId: Platform.isIOS
+            ? "1:258869472088:ios:2786e4c5678e0c9cc1d32d"
+            : "1:258869472088:android:c7601f922d1128c5c1d32d",
+        firebasemessagingSenderId:
+            Platform.isIOS ? "258869472088" : "258869472088",
+        firebaseprojectId: Platform.isIOS ? "quotely-7f787" : "quotely-7f787",
+
+        //default section
+        defaultuserId: "2",
+        defaultfirstName: "default",
+        defaultlastName: "user",
+        defaultemail: "roypamechbc@gmail.com",
+        defaultrole: "USER",
+        defaultapikey: "7cc1cd6b5beb4a30b5129c81c6d1dada",
+        defaultpaymentEndDate: "",
+        //default section1
+        defaultbackgroundimageId: 4,
+        defaultfontfamilyId: 1,
+        defaultfontColorId: 1);
+  }
+
+  static QTAppConfig _getProdConfig() {
+    return QTAppConfig(
+        backendBaseURL: "164.52.200.24:4321",
+        serviceUrl: "quotely-service",
+        httpScheme: "http",
+        //firebaseoptions
+        fireBaseApiKey: Platform.isIOS
+            ? "AIzaSyBoLrgx8dttwP1wxXZFXzbtaMJnj8iFyF8"
+            : "AIzaSyD4KVafXdlBUqDeBeJ7ZBZMohtXnIutgTc",
+        firebaseappId: Platform.isIOS
+            ? "1:258869472088:ios:2786e4c5678e0c9cc1d32d"
+            : "1:258869472088:android:c7601f922d1128c5c1d32d",
+        firebasemessagingSenderId:
+            Platform.isIOS ? "258869472088" : "258869472088",
+        firebaseprojectId: Platform.isIOS ? "quotely-7f787" : "quotely-7f787",
+
+        //default section
+        defaultuserId: "2",
+        defaultfirstName: "default",
+        defaultlastName: "user",
+        defaultemail: "roypamechbc@gmail.com",
+        defaultrole: "USER",
+        defaultapikey: "7cc1cd6b5beb4a30b5129c81c6d1dada",
+        defaultpaymentEndDate: "",
+        //default section1
+        defaultbackgroundimageId: 4,
+        defaultfontfamilyId: 1,
+        defaultfontColorId: 1);
+  }
+
+  static final QTAppConfig _instance = _getConfig();
+  static QTAppConfig _getConfig() {
+    QTAppConfig config;
+    switch (F.appFlavor) {
+      case Flavor.dev:
+        config = _getDevConfig();
+        break;
+      case Flavor.prod:
+        config = _getProdConfig();
+        break;
+      default:
+        config = _getDevConfig();
+        break;
+    }
+    return config;
+  }
+
+  static QTAppConfig get config => _instance;
+}
