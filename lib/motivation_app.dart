@@ -5,10 +5,10 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
-import 'config/app/app_config.dart';
+
 import 'controllers/app_controller.dart';
 import 'controllers/themes_controller/theme_controller.dart';
-import 'managers/admobhelper.dart';
+
 
 import 'repository/api_repository.dart';
 import 'utils/constants/app_texts.dart';
@@ -29,25 +29,7 @@ Future<void> initMotivationApp() async {
         projectId: "quotely-7f787"),
   );
 
-  //await Firebase.initializeApp();
-
-  // await FirebaseAppCheck.instance.activate();
-  // if (!kDebugMode) {
-  //   await FirebaseAppCheck.instance.activate(
-  //     androidProvider: AndroidProvider.playIntegrity,
-  //     appleProvider: AppleProvider.appAttest,
-  //   );
-  // } else {
-  //   await FirebaseAppCheck.instance.activate(
-  //     androidProvider: AndroidProvider.debug,
-  //     appleProvider: AppleProvider.debug,
-  //   );
-  // }
-
-  //
   MobileAds.instance.initialize();
-
-  //AdmobHelper.initialization();
 
   await Future.wait<void>([
     initializeAppControllers(),
