@@ -14,7 +14,7 @@ class WebViewPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: const Color(0xff323232),
         leading: GestureDetector(
-          onTap:(){
+          onTap: () {
             Get.back();
           },
           child: Container(
@@ -22,10 +22,10 @@ class WebViewPage extends StatelessWidget {
             width: 10,
             height: 10,
             child: SvgPicture.asset(
-                      "assets/svgs/images/profile/arrow.svg",
-                      height: 10,
-                      width: 10,
-                    ),
+              "assets/svgs/images/profile/arrow.svg",
+              height: 10,
+              width: 10,
+            ),
           ),
         ),
         centerTitle: true,
@@ -34,20 +34,17 @@ class WebViewPage extends StatelessWidget {
           style: TextStyle(color: Colors.white),
         ),
       ),
-      body:
-        const SizedBox(),
-      
-      //  InAppWebView(
-      //   initialUrlRequest: URLRequest(
-      //     url: Uri.parse(websiteAddress),
-      //   ),
-      //   onWebViewCreated: (controller) {
-      //     // You can access the controller here if needed.
-      //   },
-      //   initialOptions: InAppWebViewGroupOptions(
-      //     crossPlatform: InAppWebViewOptions(),
-      //   ),
-      // ),
+      body: InAppWebView(
+        initialUrlRequest: URLRequest(
+          url: WebUri.uri(Uri.parse(websiteAddress)),    
+        ),
+        onWebViewCreated: (controller) {
+          // You can access the controller here if needed.
+        },
+        initialOptions: InAppWebViewGroupOptions(
+          crossPlatform: InAppWebViewOptions(),
+        ),
+      ),
     );
   }
 }
