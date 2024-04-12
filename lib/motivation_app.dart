@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 
+import 'config/app/app_config.dart';
 import 'controllers/app_controller.dart';
 import 'controllers/themes_controller/theme_controller.dart';
 
@@ -18,21 +19,15 @@ import 'utils/utils.dart';
 Future<void> initMotivationApp() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
-    // options: FirebaseOptions(
-    //     apiKey: QTAppConfigManager.config.fireBaseApiKey,
-    //     appId: QTAppConfigManager.config.firebaseappId,
-    //     messagingSenderId: QTAppConfigManager.config.firebasemessagingSenderId,
-    //     projectId: QTAppConfigManager.config.firebaseprojectId),
-    options: const FirebaseOptions(
-        apiKey: "AIzaSyD4KVafXdlBUqDeBeJ7ZBZMohtXnIutgTc",
-        appId: "1:258869472088:android:c7601f922d1128c5c1d32d",
-        messagingSenderId: "258869472088",
-        projectId: "quotely-7f787"),
+    options: FirebaseOptions(
+        apiKey: QTAppConfigManager.config.fireBaseApiKey,
+        appId: QTAppConfigManager.config.firebaseappId,
+        messagingSenderId: QTAppConfigManager.config.firebasemessagingSenderId,
+        projectId: QTAppConfigManager.config.firebaseprojectId),
+   
   );
-
-  //https://quotely-7f787.firebaseapp.com/__/auth/handler
+  //https://quotely-7f787.firebaseapp.com/__/auth/handler////////facebook
   await FirebaseApi().initNotifications();
-
   MobileAds.instance.initialize();
 
   await Future.wait<void>([

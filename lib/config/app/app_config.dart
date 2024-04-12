@@ -22,6 +22,10 @@ class QTAppConfig {
   final String firebasemessagingSenderId;
   final String firebaseprojectId;
 
+  //RewardedAd
+  final bool rewardedAdLiveMode;
+  final String rewardedAdId;
+
   //default section1
   final int defaultbackgroundimageId;
   final int defaultfontfamilyId;
@@ -36,6 +40,10 @@ class QTAppConfig {
       required this.firebaseappId,
       required this.firebasemessagingSenderId,
       required this.firebaseprojectId,
+
+      //RewardedAd
+      required this.rewardedAdLiveMode,
+      required this.rewardedAdId,
 
       //default section
       required this.defaultfirstName,
@@ -68,6 +76,12 @@ class QTAppConfigManager {
             Platform.isIOS ? "258869472088" : "258869472088",
         firebaseprojectId: Platform.isIOS ? "quotely-7f787" : "quotely-7f787",
 
+        //RewardedAd
+        rewardedAdLiveMode: false,
+        rewardedAdId: false
+            ? "ca-app-pub-9827595854898202/4220959147"
+            : "ca-app-pub-3940256099942544/5224354917",
+
         //default section
         defaultuserId: "2",
         defaultfirstName: "default",
@@ -97,6 +111,12 @@ class QTAppConfigManager {
         firebasemessagingSenderId:
             Platform.isIOS ? "258869472088" : "258869472088",
         firebaseprojectId: Platform.isIOS ? "quotely-7f787" : "quotely-7f787",
+
+        //RewardedAd
+        rewardedAdLiveMode: false,
+        rewardedAdId: false
+            ? "ca-app-pub-9827595854898202/4220959147"
+            : "ca-app-pub-3940256099942544/5224354917",
 
         //default section
         defaultuserId: "2",
@@ -128,5 +148,6 @@ class QTAppConfigManager {
     }
     return config;
   }
+
   static QTAppConfig get config => _instance;
 }

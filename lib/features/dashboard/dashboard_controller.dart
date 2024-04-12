@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
 
+import '../../config/app/app_config.dart';
 import '../../dtos/api_dtos/dashboard_screen/backgroundsettingsuser/backgroundsettingsuser.dart';
 import '../../dtos/api_dtos/dashboard_screen/quotes_fetching/quotes_fetching.dart';
 import '../../managers/sharedpreferences.dart';
@@ -86,8 +87,8 @@ class DashboardController extends GetxController with SnackbarMixin {
 
   // ---ad related----start
   RxBool isAdLoaded = false.obs;
-  InterstitialAd? interstitialAd;
-  // RewardedAd? rewardedAd;
+  // InterstitialAd? interstitialAd;
+  RewardedAd? rewardedAd;
 
   // ---ad related----end
 
@@ -118,14 +119,16 @@ class DashboardController extends GetxController with SnackbarMixin {
     await quotesApiCall();
 
     _quoteList.value = QuoteList().quoteList;
-    createInterstitialAd();
+    //createInterstitialAd();
+    createRewardedAd();
     update();
   }
 
   @override
   void onClose() {
     pageController.dispose();
-    interstitialAd?.dispose();
+    // interstitialAd?.dispose();
+    rewardedAd?.dispose();
     super.onClose();
   }
 
@@ -147,7 +150,7 @@ class DashboardController extends GetxController with SnackbarMixin {
     if (isPaid) {
       update();
       return 2;
-    } else if (apikey != "7cc1cd6b5beb4a30b5129c81c6d1dada") {
+    } else if (apikey != QTAppConfigManager.config.defaultapikey) {
       update();
       return 1;
     } else {
@@ -181,51 +184,96 @@ class DashboardController extends GetxController with SnackbarMixin {
 
   //---ad related---start
 
-  void createInterstitialAd() {
-    InterstitialAd.load(
-      adUnitId: 'ca-app-pub-3940256099942544/1033173712',
+  // void createInterstitialAd() {
+  //   InterstitialAd.load(
+  //     adUnitId: 'ca-app-pub-3940256099942544/1033173712',
+  //     request: const AdRequest(),
+  //     adLoadCallback: InterstitialAdLoadCallback(
+  //       onAdLoaded: (ad) {
+  //         debugPrint('$ad loaded.');
+
+  //         interstitialAd = ad;
+  //       },
+  //       onAdFailedToLoad: (error) {
+  //         debugPrint('InterstitialAd failed to load: $error');
+  //         // createInterstitialAd();
+  //       },
+  //     ),
+  //   );
+  // }
+
+  // void showInterstitialAd(VoidCallback func1) async {
+  //   if (interstitialAd != null) {
+  //     interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
+  //       onAdShowedFullScreenContent: (ad) {
+  //         debugPrint('$ad onAdShowedFullScreenContent.');
+  //         //throw Exception("Condition is satisfied, disrupting flow.");
+  //       },
+  //       onAdDismissedFullScreenContent: (ad) {
+  //         debugPrint('$ad onAdDismissedFullScreenContent.');
+  //         debugPrint('manu');
+  //         ad.dispose();
+  //         createInterstitialAd();
+  //         func1();
+  //         debugPrint('manu1');
+
+  //         return;
+  //       },
+  //       onAdFailedToShowFullScreenContent: (ad, error) {
+  //         debugPrint('$ad onAdFailedToShowFullScreenContent: $error');
+  //         ad.dispose();
+  //         createInterstitialAd();
+  //       },
+  //       onAdImpression: (ad) => debugPrint('$ad impression occurred.'),
+  //     );
+  //     interstitialAd!.show();
+  //   } else {
+  //     debugPrint('Interstitial ad not yet loaded.');
+  //   }
+  // }
+
+  void createRewardedAd() {
+    RewardedAd.load(
+      adUnitId: QTAppConfigManager.config.rewardedAdId,
       request: const AdRequest(),
-      adLoadCallback: InterstitialAdLoadCallback(
+      rewardedAdLoadCallback: RewardedAdLoadCallback(
         onAdLoaded: (ad) {
           debugPrint('$ad loaded.');
-
-          interstitialAd = ad;
+          rewardedAd = ad;
         },
         onAdFailedToLoad: (error) {
-          debugPrint('InterstitialAd failed to load: $error');
-          // createInterstitialAd();
+          debugPrint('RewardedAd failed to load: $error');
         },
       ),
     );
   }
 
-  void showInterstitialAd(VoidCallback func1) async {
-    if (interstitialAd != null) {
-      interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
+  void showRewardedAd(VoidCallback func1, VoidCallback func2) async {
+    if (rewardedAd != null) {
+      rewardedAd!.fullScreenContentCallback = FullScreenContentCallback(
         onAdShowedFullScreenContent: (ad) {
           debugPrint('$ad onAdShowedFullScreenContent.');
-          //throw Exception("Condition is satisfied, disrupting flow.");
         },
         onAdDismissedFullScreenContent: (ad) {
           debugPrint('$ad onAdDismissedFullScreenContent.');
-          debugPrint('manu');
           ad.dispose();
-          createInterstitialAd();
+          createRewardedAd();
           func1();
-          debugPrint('manu1');
-
-          return;
         },
         onAdFailedToShowFullScreenContent: (ad, error) {
           debugPrint('$ad onAdFailedToShowFullScreenContent: $error');
           ad.dispose();
-          createInterstitialAd();
+          createRewardedAd();
         },
         onAdImpression: (ad) => debugPrint('$ad impression occurred.'),
       );
-      interstitialAd!.show();
+      rewardedAd!.show(
+        onUserEarnedReward: (AdWithoutView ad, RewardItem reward) {
+          func2();
+        },
+      );
     } else {
-      debugPrint('Interstitial ad not yet loaded.');
+      debugPrint('Rewarded ad not yet loaded.');
     }
   }
 
@@ -341,15 +389,18 @@ class DashboardController extends GetxController with SnackbarMixin {
   }
 
   loadAdd(VoidCallback func1) async {
-    createInterstitialAd();
-    showInterstitialAd(func1);
+    // createInterstitialAd();
+    // showInterstitialAd(func1);
+
+    createRewardedAd();
+    showRewardedAd(func1, func1);
   }
 
   void heartToggleExpanded() {
     isHeartIconChanged.toggle();
   }
 
-  saveQuotesApiCall(){
+  saveQuotesApiCall() {
     //   if ((fetchedBackgroundSettings0 != null)) {
     //   String jsonString = json.encode(fetchedBackgroundSettings0!.toJson());
     //   await qtSharedPreferences.savebackgroundSettings1(jsonString);
@@ -357,14 +408,14 @@ class DashboardController extends GetxController with SnackbarMixin {
     //   update();
     // } else {}
 
-    if ((quotelist2.isNotEmpty )) {
-      String jsonString = json.encode(quotelist2.map((quote) => quote.toJson()).toList());
+    if ((quotelist2.isNotEmpty)) {
+      String jsonString =
+          json.encode(quotelist2.map((quote) => quote.toJson()).toList());
       debugPrint("tinup${jsonString}");
       // await qtSharedPreferences.savebackgroundSettings1(jsonString);
       // await getGlobalSettingsUserPreferences();
       update();
     } else {}
-
   }
 
   quotesApiCall() async {
