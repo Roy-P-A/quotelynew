@@ -233,55 +233,15 @@ class SignInController extends GetxController with SnackbarMixin {
       debugPrint("phonenumber: ${user.phoneNumber}");
       debugPrint("photourl: ${user.photoURL}");
       debugPrint("refreshtoken: ${user.refreshToken}");
+      showSuccessSnackbar(
+          title: "Success", message: "You are successfully logined");
     } on FirebaseAuthException catch (error) {
       debugPrint("Google Sign-In error: ${error.message}");
+      showErrorSnackbar(
+          title: "Error", message: "Google Login Failed");
     }
   }
 
-// signInWithGoogle() async {
-//   try {
-//     // Begin interactive sign-in process
-//     final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
-
-//     if (gUser == null) {
-//       // User canceled the sign-in process
-//       return;
-//     }
-
-//     // Obtain auth details from request
-//     final GoogleSignInAuthentication gAuth = await gUser.authentication;
-
-//     // Create a new credential for user
-//     final credential = GoogleAuthProvider.credential(
-//       accessToken: gAuth.accessToken,
-//       idToken: gAuth.idToken,
-//     );
-
-//     // Finally, sign in
-//     final UserCredential userCredential =
-//         await FirebaseAuth.instance.signInWithCredential(credential);
-
-//         debugPrint(userCredential!.user!.email.toString());
-//     final User? user = userCredential.user;
-//         debugPrint(user.toString());
-
-//     if (user != null) {
-//       // Print user info
-//       debugPrint("email: ${user.email}");
-//       debugPrint("display name: ${user.displayName}");
-//       debugPrint("email verified: ${user.emailVerified}");
-//       debugPrint("phone number: ${user.phoneNumber}");
-//       debugPrint("photo URL: ${user.photoURL}");
-//       debugPrint("refresh token: ${user.refreshToken}");
-//     } else {
-//       debugPrint("User is null after signing in with Google.");
-//     }
-//   } on FirebaseAuthException catch (error) {
-//     debugPrint("Firebase authentication error: ${error.message}");
-//   } catch (error) {
-//     debugPrint("Unexpected error during Google Sign-In: $error");
-//   }
-// }
 
 //---
   signInWithApple() async {
@@ -307,17 +267,41 @@ class SignInController extends GetxController with SnackbarMixin {
 
   signInWithFacebook() async {
     try {
-      final LoginResult result = await FacebookAuth.instance.login();
+      final LoginResult result = await FacebookAuth.instance
+          .login(permissions: const ['email', 'public_profile']);
 
       if (result.status == LoginStatus.success) {
+        debugPrint(result.accessToken.toString());
         final AccessToken accessToken = result.accessToken!;
-        debugPrint('Failed');
+        debugPrint(accessToken.token);
+        debugPrint(accessToken.userId);
+        debugPrint('Success');
+
+        final userData = await FacebookAuth.instance.getUserData(
+          fields:
+              "email, name, picture", // Specify the fields you want to fetch
+        );
+
+        // Extract email and public profile from user data
+        final String? email = userData['email'];
+        final String? name = userData['name'];
+        final String? pictureUrl = userData['picture']['data']['url'];
+
+        debugPrint('Email: $email');
+        debugPrint('Name: $name');
+        debugPrint('Profile Picture URL: $pictureUrl');
+        showSuccessSnackbar(
+          title: "Success", message: "You are successfully logined");
       } else {
         debugPrint('Failed');
+        showErrorSnackbar(
+          title: "Error", message: "Facebook Login Failed");
       }
     } catch (e) {
       // Handle any exceptions that occur during login
       debugPrint('Facebook login error: $e');
+      showErrorSnackbar(
+          title: "Error", message: "Facebook Login Failed");
     }
   }
 
