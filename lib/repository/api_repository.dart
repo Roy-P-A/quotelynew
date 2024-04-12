@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:quotely1/dtos/api_dtos/notifications/fcm_tocken/fcm_token.dart';
 
 import '../dtos/api_dtos/categories_screen/fetchcategory/fetch_category.dart';
 import '../dtos/api_dtos/categories_screen/fetchusercategory/fetchusercategory.dart';
@@ -65,7 +66,9 @@ abstract class ApiRepository extends GetxController {
       {required SendResetTokenRequest request});
 
   Future<ChangePasswordForgotResponse> tokenChangePassword(
-      {required ChangePasswordForgotRequest request});                      
+      {required ChangePasswordForgotRequest request}); 
+
+  Future<FCMTokenResponse> fcmTokenRefresh({required FCMTokenRequest request});                     
 }
 
 class ApiRepositoryImpl extends GetxController implements ApiRepository {
@@ -269,6 +272,18 @@ class ApiRepositoryImpl extends GetxController implements ApiRepository {
         headers: request.toHeaders());
     debugPrint("response $response");
     return ChangePasswordForgotResponse.fromJson(response);
+  }
+
+  @override
+  Future<FCMTokenResponse> fcmTokenRefresh(
+      {required FCMTokenRequest request}) async {
+    final response = await _helper.postWithBody(
+      endpoint: ApiEndPoints.fcmRefreshToken,
+      params: request.toMap(),
+      body: {}
+    );
+    debugPrint("response======== $response");
+    return FCMTokenResponse.fromJson(response);
   }
 
   //

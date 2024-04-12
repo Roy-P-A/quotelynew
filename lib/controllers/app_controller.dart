@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../managers/firebase_api/firebase_fcm_token_manager.dart';
+
 
 enum LoggedStatus { loggedInitial, notLoggedIn, loggedIn }
 
@@ -16,6 +18,7 @@ class AppController extends GetxController {
 
   _fireRoute(logged) async {
     if (logged == LoggedStatus.loggedIn) {
+      FCMTokenManager.registerToken();
       Get.offAllNamed("/dashboard");
     } else if (logged == LoggedStatus.notLoggedIn) {
       Get.offAllNamed("/signin");

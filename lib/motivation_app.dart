@@ -10,6 +10,7 @@ import 'controllers/app_controller.dart';
 import 'controllers/themes_controller/theme_controller.dart';
 
 
+import 'managers/firebase_api/firebase_api.dart';
 import 'repository/api_repository.dart';
 import 'utils/constants/app_texts.dart';
 import 'utils/utils.dart';
@@ -30,6 +31,7 @@ Future<void> initMotivationApp() async {
   );
 
   //https://quotely-7f787.firebaseapp.com/__/auth/handler
+  await FirebaseApi().initNotifications();
 
   MobileAds.instance.initialize();
 
