@@ -29,6 +29,8 @@ Future<void> initMotivationApp() async {
         projectId: "quotely-7f787"),
   );
 
+  //https://quotely-7f787.firebaseapp.com/__/auth/handler
+
   MobileAds.instance.initialize();
 
   await Future.wait<void>([

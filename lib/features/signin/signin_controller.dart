@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 import '../../config/app/app_config.dart';
 import '../../dtos/api_dtos/login/login.dart';
@@ -14,6 +15,7 @@ import '../../models/signin/login_model.dart';
 import '../../repository/repository.dart';
 import '../../utils/utils.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 
 class SignInController extends GetxController with SnackbarMixin {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -280,6 +282,44 @@ class SignInController extends GetxController with SnackbarMixin {
 //     debugPrint("Unexpected error during Google Sign-In: $error");
 //   }
 // }
+
+//---
+  signInWithApple() async {
+    if (await SignInWithApple.isAvailable()) {
+      final credential = await SignInWithApple.getAppleIDCredential(
+        scopes: [
+          AppleIDAuthorizationScopes.email,
+          AppleIDAuthorizationScopes.fullName,
+        ],
+      );
+
+      debugPrint(credential.toString());
+
+      debugPrint('Email: ${credential.email}');
+      debugPrint('givenName: ${credential.givenName}');
+      debugPrint('Family Name: ${credential.familyName}');
+      debugPrint('Authorization Code: ${credential.authorizationCode}');
+      debugPrint('Identity token: ${credential.identityToken}');
+    } else {
+      debugPrint('Sign in with Apple is not available');
+    }
+  }
+
+  signInWithFacebook() async {
+    try {
+      final LoginResult result = await FacebookAuth.instance.login();
+
+      if (result.status == LoginStatus.success) {
+        final AccessToken accessToken = result.accessToken!;
+        debugPrint('Failed');
+      } else {
+        debugPrint('Failed');
+      }
+    } catch (e) {
+      // Handle any exceptions that occur during login
+      debugPrint('Facebook login error: $e');
+    }
+  }
 
   //-----------
 }

@@ -16,11 +16,11 @@ class SignInButtonList extends StatelessWidget {
         const SizedBox(
           width: 15,
         ),
-        CustomIconButton(iconName: "assets/svgs/images/signin/apple_icon.svg",functionName:()=> controller.login(),),
+        CustomIconButton(iconName: "assets/svgs/images/signin/apple_icon.svg",functionName:()=> controller.signInWithApple(),),
         const SizedBox(
           width: 15,
         ),
-        CustomIconButton(iconName: "assets/svgs/images/signin/facebook_icon.svg",functionName: ()=>controller.login(),)
+        CustomIconButton(iconName: "assets/svgs/images/signin/facebook_icon.svg",functionName: ()=>controller.signInWithFacebook(),)
       ],
     );
   }
