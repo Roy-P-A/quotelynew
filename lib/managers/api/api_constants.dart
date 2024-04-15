@@ -20,5 +20,7 @@ class ApiEndPoints {
   static const String sendEmailForForgotPassword = 'users/forgotpassword';
   static const String sendTokenForForgotPassword = 'users/sendresettoken';
   static const String tokenChangePassword = 'users/tokenchangepassword';
+
+   static const String fcmRefreshToken = 'user/refreshFirebaseToken/{token}';
  
 }

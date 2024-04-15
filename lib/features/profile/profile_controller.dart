@@ -1,7 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
+import '../../config/app/app_config.dart';
 import '../../managers/sharedpreferences.dart';
 import '../../models/basic_settings_category/basic_list_model.dart';
 import '../../utils/utils.dart';
@@ -43,7 +47,8 @@ class ProfileController extends GetxController {
   late OverlayEntry _overlayEntry;
 
   RxBool isAdLoaded = false.obs;
-  InterstitialAd? interstitialAd;
+  //InterstitialAd? interstitialAd;
+  RewardedAd? rewardedAd;
 
   @override
   void onInit() async {
@@ -54,7 +59,8 @@ class ProfileController extends GetxController {
 
   initFunction() async {
     _generalSettings.value = BasicSettingsList().settingsList;
-    createInterstitialAd();
+    //createInterstitialAd();
+    createRewardedAd();
     await fetchingUserCredentials();
     _isBannerChecker1.value = await bannerChecker();
     await listRemover();
@@ -62,50 +68,95 @@ class ProfileController extends GetxController {
     debugPrint(isBannerChecker1.toString());
   }
 
-    void createInterstitialAd() {
-    InterstitialAd.load(
-      adUnitId: 'ca-app-pub-3940256099942544/1033173712',
+  //   void createInterstitialAd() {
+  //   InterstitialAd.load(
+  //     adUnitId: 'ca-app-pub-3940256099942544/1033173712',
+  //     request: const AdRequest(),
+  //     adLoadCallback: InterstitialAdLoadCallback(
+  //       onAdLoaded: (ad) {
+  //         debugPrint('$ad loaded.');
+
+  //         interstitialAd = ad;
+  //       },
+  //       onAdFailedToLoad: (error) {
+  //         debugPrint('InterstitialAd failed to load: $error');
+  //       },
+  //     ),
+  //   );
+  // }
+
+  // void showInterstitialAd(String routeLink) async {
+  //   if (interstitialAd != null) {
+  //     interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
+  //       onAdShowedFullScreenContent: (ad) {
+  //         debugPrint('$ad onAdShowedFullScreenContent.');
+  //         //throw Exception("Condition is satisfied, disrupting flow.");
+  //       },
+  //       onAdDismissedFullScreenContent: (ad) {
+  //         debugPrint('$ad onAdDismissedFullScreenContent.');
+  //         debugPrint('manu');
+  //         ad.dispose();
+  //         createInterstitialAd();
+  //         Get.toNamed(routeLink);
+  //         debugPrint('manu1');
+
+  //         return;
+  //       },
+  //       onAdFailedToShowFullScreenContent: (ad, error) {
+  //         debugPrint('$ad onAdFailedToShowFullScreenContent: $error');
+  //         ad.dispose();
+  //         createInterstitialAd();
+  //       },
+  //       onAdImpression: (ad) => debugPrint('$ad impression occurred.'),
+  //     );
+  //     interstitialAd!.show();
+  //   } else {
+  //     debugPrint('Interstitial ad not yet loaded.');
+  //   }
+  // }
+
+  void createRewardedAd() {
+    RewardedAd.load(
+      adUnitId: QTAppConfigManager.config.rewardedAdId,
       request: const AdRequest(),
-      adLoadCallback: InterstitialAdLoadCallback(
+      rewardedAdLoadCallback: RewardedAdLoadCallback(
         onAdLoaded: (ad) {
           debugPrint('$ad loaded.');
-
-          interstitialAd = ad;
+          rewardedAd = ad;
         },
         onAdFailedToLoad: (error) {
-          debugPrint('InterstitialAd failed to load: $error');
+          debugPrint('RewardedAd failed to load: $error');
         },
       ),
     );
   }
 
-  void showInterstitialAd(String routeLink) async {
-    if (interstitialAd != null) {
-      interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
+  void showRewardedAd(String routeLink, String routeLink1) async {
+    if (rewardedAd != null) {
+      rewardedAd!.fullScreenContentCallback = FullScreenContentCallback(
         onAdShowedFullScreenContent: (ad) {
           debugPrint('$ad onAdShowedFullScreenContent.');
-          //throw Exception("Condition is satisfied, disrupting flow.");
         },
         onAdDismissedFullScreenContent: (ad) {
           debugPrint('$ad onAdDismissedFullScreenContent.');
-          debugPrint('manu');
           ad.dispose();
-          createInterstitialAd();
-          Get.toNamed(routeLink);
-          debugPrint('manu1');
-
-          return;
+          createRewardedAd();
+          routeLink;
         },
         onAdFailedToShowFullScreenContent: (ad, error) {
           debugPrint('$ad onAdFailedToShowFullScreenContent: $error');
           ad.dispose();
-          createInterstitialAd();
+          createRewardedAd();
         },
         onAdImpression: (ad) => debugPrint('$ad impression occurred.'),
       );
-      interstitialAd!.show();
+      rewardedAd!.show(
+        onUserEarnedReward: (AdWithoutView ad, RewardItem reward) {
+          routeLink1;
+        },
+      );
     } else {
-      debugPrint('Interstitial ad not yet loaded.');
+      debugPrint('Rewarded ad not yet loaded.');
     }
   }
 
@@ -125,7 +176,7 @@ class ProfileController extends GetxController {
     if (isPaid) {
       update();
       return 2;
-    } else if (apikey != "7cc1cd6b5beb4a30b5129c81c6d1dada") {
+    } else if (apikey != QTAppConfigManager.config.defaultapikey) {
       update();
       return 1;
     } else {
@@ -146,6 +197,7 @@ class ProfileController extends GetxController {
     scrollController1.dispose();
     scrollController2.dispose();
     scrollController3.dispose();
+    rewardedAd?.dispose();
     super.onClose();
   }
 
@@ -166,8 +218,10 @@ class ProfileController extends GetxController {
   }
 
   loadAdd(String routeLink) async {
-    createInterstitialAd();
-    showInterstitialAd(routeLink);
+    // createInterstitialAd();
+    // showInterstitialAd(routeLink);
+    createRewardedAd();
+    showRewardedAd(routeLink, routeLink);
   }
 
   supportSettingsRouting(String routeLink) async {
@@ -224,7 +278,32 @@ class ProfileController extends GetxController {
   void yesandhidePopup() async {
     _overlayEntry.remove();
     await clearSharedPreferences();
+    await signouts();
     Get.offAllNamed("/signin");
     update();
+  }
+
+  signouts() async {
+    await signOutFromFacebook();
+    await signOutFromGoogle();
+  }
+
+  signOutFromFacebook() async {
+    try {
+      await FacebookAuth.instance.logOut();
+      debugPrint('Successfully signed out from Facebook');
+    } catch (e) {
+      debugPrint('Facebook sign out error: $e');
+    }
+  }
+
+  signOutFromGoogle() async {
+    try {
+      await GoogleSignIn().signOut();
+      await FirebaseAuth.instance.signOut();
+      debugPrint('Successfully signed out from Google');
+    } catch (e) {
+      debugPrint('Google sign out error: $e');
+    }
   }
 }
