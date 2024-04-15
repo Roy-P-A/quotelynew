@@ -42,7 +42,7 @@ class QuoteSection extends StatelessWidget {
             // PageController(
             //     initialPage: 0, keepPage: true, viewportFraction: 1),
             physics: const BouncingScrollPhysics(),
-            itemCount: controller.quotelist.length,
+            itemCount: controller.quoteList3.length,
 
             itemBuilder: (context, index) {
               controller.pinu(index);
@@ -62,7 +62,7 @@ class QuoteSection extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              controller.quotelist[controller.pageIndex].quote,
+              controller.quoteList3[controller.pageIndex].quote,
               textAlign: TextAlign.center,
               style: TextStyle(
                   fontSize: 24,

@@ -70,6 +70,20 @@ class QTSharedPreferences {
     await prefs.setString('backgroundsettings', jsonData1);
     debugPrint('Tokens saved to SharedPreferences');
   }
+
+  Future<void> savequotesList(
+    String jsonData1,
+  ) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    await prefs.setString('quoteList', jsonData1);
+    debugPrint('Tokens saved to SharedPreferences');
+  }
+
+   Future<String?> getQuoteList() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('quoteList') ?? null;
+  }
 }
 
 // //logout

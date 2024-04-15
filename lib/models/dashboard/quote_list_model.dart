@@ -23,5 +23,15 @@ class QuoteListModel1 {
       'quote': quote,
       'isRead': isRead,
     };
-  }    
+  }
+
+  //static fromJson(Map<String, dynamic> jsonMap) {}  
+
+  factory QuoteListModel1.fromJson(Map<String, dynamic> jsonMap) {
+    return QuoteListModel1(
+      id: jsonMap['id'],
+      quote: jsonMap['quote'],
+      isRead: jsonMap['isRead'],
+    );
+  }  
 }

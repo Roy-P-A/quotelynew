@@ -77,6 +77,12 @@ class DashboardController extends GetxController with SnackbarMixin {
   final _quoteList2 = (List<QuoteListModel1>.empty()).obs;
   List<QuoteListModel1> get quotelist2 => _quoteList2;
 
+  final _quoteListInStringFormat = "".obs;
+  String get quoteListInStringFormat => _quoteListInStringFormat.value;
+
+  final _quoteList3 = (List<QuoteListModel1>.empty()).obs;
+  List<QuoteListModel1> get quoteList3 => _quoteList3;
+
   final _totalPages = 0.obs;
   int get totalPages => _totalPages.value;
 
@@ -389,9 +395,6 @@ class DashboardController extends GetxController with SnackbarMixin {
   }
 
   loadAdd(VoidCallback func1) async {
-    // createInterstitialAd();
-    // showInterstitialAd(func1);
-
     createRewardedAd();
     showRewardedAd(func1, func1);
   }
@@ -400,25 +403,43 @@ class DashboardController extends GetxController with SnackbarMixin {
     isHeartIconChanged.toggle();
   }
 
-  saveQuotesApiCall() {
-    //   if ((fetchedBackgroundSettings0 != null)) {
-    //   String jsonString = json.encode(fetchedBackgroundSettings0!.toJson());
-    //   await qtSharedPreferences.savebackgroundSettings1(jsonString);
-    //   await getGlobalSettingsUserPreferences();
-    //   update();
-    // } else {}
-
+  saveQuotesApiCall() async {
     if ((quotelist2.isNotEmpty)) {
       String jsonString =
           json.encode(quotelist2.map((quote) => quote.toJson()).toList());
-      debugPrint("tinup${jsonString}");
-      // await qtSharedPreferences.savebackgroundSettings1(jsonString);
-      // await getGlobalSettingsUserPreferences();
+
+      await qtSharedPreferences.savequotesList(jsonString);
+      _quoteListInStringFormat.value =
+          await qtSharedPreferences.getQuoteList() ?? "";
+      if (quoteListInStringFormat != "") {
+        List<Map<String, dynamic>> jsonList = List<Map<String, dynamic>>.from(
+            json.decode(quoteListInStringFormat));
+
+        List<QuoteListModel1> quoteList = jsonList
+            .map((jsonMap) => QuoteListModel1.fromJson(jsonMap))
+            .toList();
+        _quoteList3.value = quoteList;
+      }
+      debugPrint("manu${_quoteList3.value}");
       update();
     } else {}
   }
 
+  getQuoteListFromSavedApi() async {
+    _quoteListInStringFormat.value =
+        await qtSharedPreferences.getQuoteList() ?? "";
+    if (quoteListInStringFormat != "") {
+      List<Map<String, dynamic>> jsonList =
+          List<Map<String, dynamic>>.from(json.decode(quoteListInStringFormat));
+
+      List<QuoteListModel1> quoteList =
+          jsonList.map((jsonMap) => QuoteListModel1.fromJson(jsonMap)).toList();
+      _quoteList3.value = quoteList;
+    }
+  }
+
   quotesApiCall() async {
+    getQuoteListFromSavedApi();
     _isLoading.value = true;
     try {
       final request = QuotesFetchingRequest(
@@ -443,7 +464,9 @@ class DashboardController extends GetxController with SnackbarMixin {
               ),
             );
           }
-          //await saveQuotesApiCall();
+          debugPrint("teena${quotelist2}");
+
+          await saveQuotesApiCall();
         }
       } else {
         _isLoading.value = false;
