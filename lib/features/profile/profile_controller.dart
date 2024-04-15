@@ -1,6 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 import '../../config/app/app_config.dart';
 import '../../managers/sharedpreferences.dart';
@@ -194,6 +197,7 @@ class ProfileController extends GetxController {
     scrollController1.dispose();
     scrollController2.dispose();
     scrollController3.dispose();
+    rewardedAd?.dispose();
     super.onClose();
   }
 
@@ -274,7 +278,32 @@ class ProfileController extends GetxController {
   void yesandhidePopup() async {
     _overlayEntry.remove();
     await clearSharedPreferences();
+    await signouts();
     Get.offAllNamed("/signin");
     update();
+  }
+
+  signouts() async {
+    await signOutFromFacebook();
+    await signOutFromGoogle();
+  }
+
+  signOutFromFacebook() async {
+    try {
+      await FacebookAuth.instance.logOut();
+      debugPrint('Successfully signed out from Facebook');
+    } catch (e) {
+      debugPrint('Facebook sign out error: $e');
+    }
+  }
+
+  signOutFromGoogle() async {
+    try {
+      await GoogleSignIn().signOut();
+      await FirebaseAuth.instance.signOut();
+      debugPrint('Successfully signed out from Google');
+    } catch (e) {
+      debugPrint('Google sign out error: $e');
+    }
   }
 }

@@ -235,6 +235,8 @@ class SignInController extends GetxController with SnackbarMixin {
       debugPrint("refreshtoken: ${user.refreshToken}");
       showSuccessSnackbar(
           title: "Success", message: "You are successfully logined");
+      await Future.delayed(const Duration(seconds: 2),(){});
+      await signUpAsGuest();    
     } on FirebaseAuthException catch (error) {
       debugPrint("Google Sign-In error: ${error.message}");
       showErrorSnackbar(
@@ -244,26 +246,58 @@ class SignInController extends GetxController with SnackbarMixin {
 
 
 //---
-  signInWithApple() async {
-    if (await SignInWithApple.isAvailable()) {
+  // signInWithApple() async {
+  //   if (await SignInWithApple.isAvailable()) {
+  //     final credential = await SignInWithApple.getAppleIDCredential(
+  //       scopes: [
+  //         AppleIDAuthorizationScopes.email,
+  //         AppleIDAuthorizationScopes.fullName,
+  //       ],
+  //     );
+
+  //     debugPrint(credential.toString());
+
+  //     debugPrint('Email: ${credential.email}');
+  //     debugPrint('givenName: ${credential.givenName}');
+  //     debugPrint('Family Name: ${credential.familyName}');
+  //     debugPrint('Authorization Code: ${credential.authorizationCode}');
+  //     debugPrint('Identity token: ${credential.identityToken}');
+  //   } else {
+  //     debugPrint('Sign in with Apple is not available');
+  //   }
+  // }
+
+   signInWithApple() async {
+    try {
+      // Perform the Apple sign-in process
       final credential = await SignInWithApple.getAppleIDCredential(
         scopes: [
           AppleIDAuthorizationScopes.email,
           AppleIDAuthorizationScopes.fullName,
         ],
+        webAuthenticationOptions: WebAuthenticationOptions(
+          clientId: 'your_client_id',
+          redirectUri: Uri.parse(
+            'https://your-redirect-uri.com',
+          ),
+        ),
       );
 
-      debugPrint(credential.toString());
-
+      // Handle the returned credential
+      debugPrint('User ID: ${credential.userIdentifier}');
       debugPrint('Email: ${credential.email}');
-      debugPrint('givenName: ${credential.givenName}');
-      debugPrint('Family Name: ${credential.familyName}');
+     
       debugPrint('Authorization Code: ${credential.authorizationCode}');
-      debugPrint('Identity token: ${credential.identityToken}');
-    } else {
-      debugPrint('Sign in with Apple is not available');
+      debugPrint('Identity Token: ${credential.identityToken}');
+      debugPrint('State: ${credential.state}');
+    } catch (e) {
+      // Handle errors
+      debugPrint('Error during sign-in with Apple: $e');
+     
     }
   }
+
+
 
   signInWithFacebook() async {
     try {
@@ -292,6 +326,8 @@ class SignInController extends GetxController with SnackbarMixin {
         debugPrint('Profile Picture URL: $pictureUrl');
         showSuccessSnackbar(
           title: "Success", message: "You are successfully logined");
+        await Future.delayed(const Duration(seconds: 2),(){});  
+        await signUpAsGuest(); 
       } else {
         debugPrint('Failed');
         showErrorSnackbar(
