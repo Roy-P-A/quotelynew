@@ -138,8 +138,30 @@ class DashboardController extends GetxController with SnackbarMixin {
     super.onClose();
   }
 
-  pinu(index) {
+  indexNotifying(index) async{
     _pageIndex.value = index;
+     _quoteListInStringFormat.value =
+        await qtSharedPreferences.getQuoteList() ?? "";
+    if (quoteListInStringFormat != "") {
+      List<Map<String, dynamic>> jsonList =
+          List<Map<String, dynamic>>.from(json.decode(quoteListInStringFormat));
+
+      List<QuoteListModel1> quoteList =
+          jsonList.map((jsonMap) => QuoteListModel1.fromJson(jsonMap)).toList();
+      quoteList[index].isRead = true;
+
+      for(int i=0;i<quoteList.length;i++){
+        debugPrint(quoteList[i].toJson().toString());
+      }
+     
+    }
+      
+  }
+
+
+
+  quoteListReading(){
+
   }
 
   fetchingUserCredentials() async {

@@ -45,7 +45,7 @@ class QuoteSection extends StatelessWidget {
             itemCount: controller.quoteList3.length,
 
             itemBuilder: (context, index) {
-              controller.pinu(index);
+              controller.indexNotifying(index);
               return oneQuotePageSection(
                   context, index, controller, screenChange);
             }),
