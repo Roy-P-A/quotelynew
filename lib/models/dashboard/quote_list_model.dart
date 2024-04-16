@@ -6,6 +6,21 @@ class QuoteListModel {
     required this.id,
     required this.quote,
   });
+
+  factory QuoteListModel.fromJson(Map<String, dynamic> jsonMap) {
+    return QuoteListModel(
+      id: jsonMap['id'],
+      quote: jsonMap['quote'],
+    );
+  }  
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'quote': quote,
+    };
+  }
+
 }
 
 class QuoteListModel1 {
@@ -16,6 +31,8 @@ class QuoteListModel1 {
 
   QuoteListModel1(
       {required this.id, required this.quote, required this.isRead});
+
+      
 
    Map<String, dynamic> toJson() {
     return {
