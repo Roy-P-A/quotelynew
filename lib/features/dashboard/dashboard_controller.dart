@@ -138,9 +138,9 @@ class DashboardController extends GetxController with SnackbarMixin {
     super.onClose();
   }
 
-  indexNotifying(index) async{
+  indexNotifying(index) async {
     _pageIndex.value = index;
-     _quoteListInStringFormat.value =
+    _quoteListInStringFormat.value =
         await qtSharedPreferences.getQuoteList() ?? "";
     if (quoteListInStringFormat != "") {
       List<Map<String, dynamic>> jsonList =
@@ -150,19 +150,50 @@ class DashboardController extends GetxController with SnackbarMixin {
           jsonList.map((jsonMap) => QuoteListModel1.fromJson(jsonMap)).toList();
       quoteList[index].isRead = true;
 
-      for(int i=0;i<quoteList.length;i++){
-        debugPrint(quoteList[i].toJson().toString());
-      }
-     
+      if ((quoteList != null)) {
+        String jsonString = json.encode(quoteList!);
+        debugPrint(jsonString);
+        await qtSharedPreferences.savebackgroundSettings1(jsonString);
+
+        //----
+        // _quoteListInStringFormat.value = "";
+        // _quoteListInStringFormat.value =
+        //     await qtSharedPreferences.getQuoteList() ?? "";
+        // if (quoteListInStringFormat != "") {
+        //   List<Map<String, dynamic>> jsonList = List<Map<String, dynamic>>.from(
+        //       json.decode(quoteListInStringFormat));
+
+        //   List<QuoteListModel1> quoteList = jsonList
+        //       .map((jsonMap) => QuoteListModel1.fromJson(jsonMap))
+        //       .toList();
+        //   _quoteList3.value = quoteList;
+        //   for (int i = 0; i < quoteList3.length; i++) {
+        //     debugPrint(quoteList3[i].toJson().toString());
+        //   }
+        // }
+
+        //-----
+      } else {}
     }
-      
   }
 
+  //  getQuoteListFromSavedApi() async {
+  //   _quoteListInStringFormat.value =
+  //       await qtSharedPreferences.getQuoteList() ?? "";
+  //   if (quoteListInStringFormat != "") {
+  //     List<Map<String, dynamic>> jsonList =
+  //         List<Map<String, dynamic>>.from(json.decode(quoteListInStringFormat));
+
+  //     List<QuoteListModel1> quoteList =
+  //         jsonList.map((jsonMap) => QuoteListModel1.fromJson(jsonMap)).toList();
+  //     _quoteList3.value = quoteList;
+  //   }
+  // }
 
 
-  quoteListReading(){
+  // quoteListReading(){
 
-  }
+  // }
 
   fetchingUserCredentials() async {
     final qtSharedPreferences = QTSharedPreferences();
