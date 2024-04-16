@@ -77,8 +77,11 @@ class DashboardController extends GetxController with SnackbarMixin {
   final _quoteList3 = (List<QuoteListModel>.empty()).obs;
   List<QuoteListModel> get quoteList3 => _quoteList3;
 
-   final _readedquoteList3 = (List<QuoteListModel>.empty()).obs;
-  List<QuoteListModel> get readedquoteList3 => _readedquoteList3;
+  final Set<QuoteListModel> _readedquoteList3 = <QuoteListModel>{}.obs;
+  Set<QuoteListModel> get readedquoteList3 => _readedquoteList3;
+
+  final _readedquoteListSending = (List<int>.empty()).obs;
+  List<int> get readedquoteListSending => _readedquoteListSending;
 
   final _totalPages = 0.obs;
   int get totalPages => _totalPages.value;
@@ -138,11 +141,18 @@ class DashboardController extends GetxController with SnackbarMixin {
   indexNotifying(index) async {
     _pageIndex.value = index;
 
-  
+    if (!_readedquoteList3.contains(quoteList3[index])) {
+      _readedquoteList3.add(quoteList3[index]);
+    }
 
-    _readedquoteList3.value.add(quoteList3[index]);
-    debugPrint(readedquoteList3.toString());
-    
+    if (readedquoteList3.length > 2) {
+      _readedquoteListSending.clear();
+      List<QuoteListModel> tempList = readedquoteList3.toList();
+      for (int i = 0; i < tempList.length; i++) {
+        _readedquoteListSending.value.add(int.parse(tempList[i].id));
+      }
+      debugPrint("tipper${readedquoteListSending}");
+    }
   }
 
   fetchingUserCredentials() async {
@@ -404,7 +414,7 @@ class DashboardController extends GetxController with SnackbarMixin {
         sortBy: 'id',
         apikey: apikey,
         userid: user_id,
-        readedList: [],
+        readedList: readedquoteListSending,
       );
       final response = await ApiRepository.to.quotesFetching(request: request);
       if (response.status == 200) {
