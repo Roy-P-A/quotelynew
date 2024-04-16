@@ -152,7 +152,7 @@ class ProfileController extends GetxController {
       );
       rewardedAd!.show(
         onUserEarnedReward: (AdWithoutView ad, RewardItem reward) {
-          routeLink1;
+          Get.toNamed(routeLink);
         },
       );
     } else {
