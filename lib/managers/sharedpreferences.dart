@@ -84,6 +84,12 @@ class QTSharedPreferences {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString('quoteList') ?? null;
   }
+
+   Future<void> clearQuoteList() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove('quoteList');
+    
+  }
 }
 
 // //logout
