@@ -74,11 +74,11 @@ class DashboardController extends GetxController with SnackbarMixin {
   final _quoteListInStringFormat = "".obs;
   String get quoteListInStringFormat => _quoteListInStringFormat.value;
 
-  final _quoteListInStringFormat1 = "".obs;
-  String get quoteListInStringFormat1 => _quoteListInStringFormat1.value;
-
   final _quoteList3 = (List<QuoteListModel>.empty()).obs;
   List<QuoteListModel> get quoteList3 => _quoteList3;
+
+   final _readedquoteList3 = (List<QuoteListModel>.empty()).obs;
+  List<QuoteListModel> get readedquoteList3 => _readedquoteList3;
 
   final _totalPages = 0.obs;
   int get totalPages => _totalPages.value;
@@ -137,45 +137,12 @@ class DashboardController extends GetxController with SnackbarMixin {
 
   indexNotifying(index) async {
     _pageIndex.value = index;
-    // _quoteListInStringFormat.value =
-    //     await qtSharedPreferences.getQuoteList() ?? "";
-    // if (quoteListInStringFormat != "") {
-    //   List<Map<String, dynamic>> jsonList =
-    //       List<Map<String, dynamic>>.from(json.decode(quoteListInStringFormat));
 
-    //   List<QuoteListModel1> quoteList =
-    //       jsonList.map((jsonMap) => QuoteListModel1.fromJson(jsonMap)).toList();
-    //quoteList[index].isRead = true;
+  
 
-    //   if ((quoteList != null)) {
-    //     String jsonString = json.encode(quoteList!);
-    //     debugPrint(jsonString);
-
-    //     await qtSharedPreferences.clearQuoteList();
-
-    //     //await qtSharedPreferences.savebackgroundSettings1(jsonString);
-
-    //     //----
-    //     // _quoteListInStringFormat1.value = "";
-    //     // _quoteListInStringFormat1.value =
-    //     //     await qtSharedPreferences.getQuoteList() ?? "";
-    //       //  debugPrint(quoteListInStringFormat1);
-    //     // if (quoteListInStringFormat != "") {
-    //     //   List<Map<String, dynamic>> jsonList = List<Map<String, dynamic>>.from(
-    //     //       json.decode(quoteListInStringFormat));
-
-    //     //   List<QuoteListModel1> quoteList = jsonList
-    //     //       .map((jsonMap) => QuoteListModel1.fromJson(jsonMap))
-    //     //       .toList();
-    //     //   _quoteList3.value = quoteList;
-    //     //   for (int i = 0; i < quoteList3.length; i++) {
-    //     //     debugPrint(quoteList3[i].toJson().toString());
-    //     //   }
-    //     // }
-
-    //     //-----
-    //   } else {}
-    //}
+    _readedquoteList3.value.add(quoteList3[index]);
+    debugPrint(readedquoteList3.toString());
+    
   }
 
   fetchingUserCredentials() async {
