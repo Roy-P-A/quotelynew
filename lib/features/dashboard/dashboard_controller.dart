@@ -138,6 +138,12 @@ class DashboardController extends GetxController with SnackbarMixin {
     super.onClose();
   }
 
+   @override
+  void dispose() {
+    rewardedAd?.dispose();
+    super.dispose();
+  }
+
   indexNotifying(index) async {
     _pageIndex.value = index;
 

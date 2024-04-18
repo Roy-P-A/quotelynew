@@ -4,17 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-
-
 import 'config/app/app_config.dart';
 import 'controllers/app_controller.dart';
 import 'controllers/themes_controller/theme_controller.dart';
-
-
 import 'managers/firebase_api/firebase_api.dart';
 import 'repository/api_repository.dart';
 import 'utils/constants/app_texts.dart';
 import 'utils/utils.dart';
+import 'package:in_app_purchase/in_app_purchase.dart';
 
 Future<void> initMotivationApp() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,6 +25,7 @@ Future<void> initMotivationApp() async {
   );
   //https://quotely-7f787.firebaseapp.com/__/auth/handler////////facebook
   await FirebaseApi().initNotifications();
+  // InAppPurchaseConnection.enablePendingPurchases();
   MobileAds.instance.initialize();
 
   await Future.wait<void>([

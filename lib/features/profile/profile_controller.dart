@@ -201,6 +201,12 @@ class ProfileController extends GetxController {
     super.onClose();
   }
 
+     @override
+  void dispose() {
+    rewardedAd?.dispose();
+    super.dispose();
+  }
+
   needHelpBottomSheetFunction() async {
     NeedHelpBottomSheet().needHelpBottomSheet(
       Get.context!,
@@ -211,7 +217,8 @@ class ProfileController extends GetxController {
     if (isBannerChecker1 == 2) {
       Get.toNamed(routeLink);
     } else if (isBannerChecker1 == 1) {
-      loadAdd(routeLink);
+      //loadAdd(routeLink);
+      Get.toNamed(routeLink);
     } else {
       showPopup(context);
     }
