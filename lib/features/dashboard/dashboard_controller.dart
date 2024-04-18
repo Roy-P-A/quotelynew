@@ -129,10 +129,9 @@ class DashboardController extends GetxController with SnackbarMixin {
   initFunction() async {
     await fetchingUserCredentials();
     await getGlobalSettingsUser();
+    await getQuoteListFromSavedApi();
     await quotesApiCall();
 
-    _quoteList.value = QuoteList().quoteList;
-    //createInterstitialAd();
     createRewardedAd();
     update();
   }
@@ -158,13 +157,19 @@ class DashboardController extends GetxController with SnackbarMixin {
       _readedquoteList3.add(quoteList3[index]);
     }
 
+    debugPrint("chin${readedquoteList3}");
+
     if (readedquoteList3.length > 2) {
+      
       _readedquoteListSending.clear();
       List<QuoteListModel> tempList = readedquoteList3.toList();
+      _readedquoteList3.clear();
       for (int i = 0; i < tempList.length; i++) {
         _readedquoteListSending.value.add(int.parse(tempList[i].id));
       }
       debugPrint("tipper${readedquoteListSending}");
+      await quotesApiCall();
+      await getQuoteListFromSavedApi();
     }
   }
 
@@ -362,7 +367,7 @@ class DashboardController extends GetxController with SnackbarMixin {
     try {
       final result = await Share.shareXFiles([XFile(tempPath)],
           text: 'motivational quotes');
-       _isLoadingShare.value = false;    
+      _isLoadingShare.value = false;
       if (result.status == ShareResultStatus.success) {
         _isModified.value = false;
         update();
@@ -375,10 +380,9 @@ class DashboardController extends GetxController with SnackbarMixin {
       print('Error sharing image: $e');
       _isLoadingShare.value = false;
       _isModified.value = false;
-       update();
+      update();
     }
   }
-  
 
   customButton1Function(BuildContext context, String pageRoute) async {
     _isPageroute1.value = pageRoute;
@@ -435,7 +439,6 @@ class DashboardController extends GetxController with SnackbarMixin {
   }
 
   quotesApiCall() async {
-    getQuoteListFromSavedApi();
     _isLoading.value = true;
     try {
       final request = QuotesFetchingRequest(
