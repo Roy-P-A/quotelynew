@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -345,18 +346,19 @@ class DashboardController extends GetxController with SnackbarMixin {
         await image.toByteData(format: ui.ImageByteFormat.png);
     final Uint8List pngBytes = byteData!.buffer.asUint8List();
 
-    img.Image imgImage = img.decodeImage(pngBytes)!;
+    // img.Image imgImage = img.decodeImage(pngBytes)!;
 
-    // Resize the image to reduce its size
-    img.Image resizedImage = img.copyResize(imgImage, width: 800);
+    // // Resize the image to reduce its size
+    // img.Image resizedImage = img.copyResize(imgImage, width: 800);
 
-    // Compress the image to reduce file size
-    Uint8List compressedBytes = img.encodeJpg(resizedImage, quality: 100);
+    // // Compress the image to reduce file size
+    // Uint8List compressedBytes = img.encodeJpg(resizedImage, quality: 100);
 
     final tempDir = await getTemporaryDirectory();
     final tempPath = '${tempDir.path}/screenshot.png';
+    File(tempPath).writeAsBytesSync(pngBytes);
     //File(tempPath).writeAsBytesSync(img.encodePng(imgImage));
-    File(tempPath).writeAsBytesSync(compressedBytes);
+    //File(tempPath).writeAsBytesSync(compressedBytes);
     try {
       final result = await Share.shareXFiles([XFile(tempPath)],
           text: 'motivational quotes');
@@ -372,8 +374,11 @@ class DashboardController extends GetxController with SnackbarMixin {
     } catch (e) {
       print('Error sharing image: $e');
       _isLoadingShare.value = false;
+      _isModified.value = false;
+       update();
     }
   }
+  
 
   customButton1Function(BuildContext context, String pageRoute) async {
     _isPageroute1.value = pageRoute;
