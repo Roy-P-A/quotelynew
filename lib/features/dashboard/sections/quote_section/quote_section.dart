@@ -74,10 +74,10 @@ class QuoteSection extends StatelessWidget {
             const SizedBox(
               height: 10,
             ),
-            screenChange == true
+            controller.isModified == false
                 ? CustomFabButton(controller: controller)
                 : const SizedBox(),
-            screenChange == true
+            controller.isModified == false
                 ? const SizedBox()
                 : Container(
                     child: SvgPicture.asset(

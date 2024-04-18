@@ -113,6 +113,12 @@ class DashboardController extends GetxController with SnackbarMixin {
   final _isBannerChecker1 = 0.obs;
   int get isBannerChecker1 => _isBannerChecker1.value;
 
+  final _isModified = false.obs;
+  bool get isModified => _isModified.value;
+
+  final _isLoadingShare = false.obs;
+  bool get isLoadingShare => _isLoadingShare.value;
+
   @override
   void onInit() async {
     await initFunction();
@@ -138,7 +144,7 @@ class DashboardController extends GetxController with SnackbarMixin {
     super.onClose();
   }
 
-   @override
+  @override
   void dispose() {
     rewardedAd?.dispose();
     super.dispose();
@@ -318,6 +324,7 @@ class DashboardController extends GetxController with SnackbarMixin {
   }
 
   void shareButton(BuildContext context) async {
+    _isModified.value = true;
     await beforeButton(context, shareImageToSocialMedia);
     shareImageToSocialMedia();
   }
@@ -328,6 +335,8 @@ class DashboardController extends GetxController with SnackbarMixin {
   }
 
   shareImageToSocialMedia() async {
+    _isLoadingShare.value = true;
+    await Future.delayed(const Duration(seconds: 1));
     final RenderRepaintBoundary boundary =
         _key.currentContext!.findRenderObject() as RenderRepaintBoundary;
 
@@ -339,19 +348,30 @@ class DashboardController extends GetxController with SnackbarMixin {
     img.Image imgImage = img.decodeImage(pngBytes)!;
 
     // Resize the image to reduce its size
-    img.Image resizedImage = img.copyResize(imgImage, width: 500);
+    img.Image resizedImage = img.copyResize(imgImage, width: 800);
 
     // Compress the image to reduce file size
-    Uint8List compressedBytes = img.encodeJpg(resizedImage, quality: 80);
+    Uint8List compressedBytes = img.encodeJpg(resizedImage, quality: 100);
 
     final tempDir = await getTemporaryDirectory();
     final tempPath = '${tempDir.path}/screenshot.png';
     //File(tempPath).writeAsBytesSync(img.encodePng(imgImage));
     File(tempPath).writeAsBytesSync(compressedBytes);
     try {
-      await Share.shareFiles([tempPath], text: 'motivational quotes');
+      final result = await Share.shareXFiles([XFile(tempPath)],
+          text: 'motivational quotes');
+       _isLoadingShare.value = false;    
+      if (result.status == ShareResultStatus.success) {
+        _isModified.value = false;
+        update();
+      }
+      if (result.status == ShareResultStatus.dismissed) {
+        _isModified.value = false;
+        update();
+      }
     } catch (e) {
       print('Error sharing image: $e');
+      _isLoadingShare.value = false;
     }
   }
 
