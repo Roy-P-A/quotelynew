@@ -137,8 +137,9 @@ class OnboardSecondController extends GetxController with SnackbarMixin {
           await ApiRepository.to.selectUserCategory(request: request);
 
       if (response.status == 200) {
-        await showSuccessSnackbar(
-            title: "Success", message: "Category successfully updated ");
+        // await showSuccessSnackbar(
+        //     title: "Success", message: "Category successfully updated ");
+        Get.offAllNamed("/onboardthird");
 
         _isLoadingUserCategoryFinished(true);
         update();
