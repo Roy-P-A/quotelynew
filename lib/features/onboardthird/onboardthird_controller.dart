@@ -95,6 +95,6 @@ class OnboardThirdController extends GetxController with SnackbarMixin {
   }
 
   selectPersonalizeListView(String value,String name) {
-    Get.toNamed('/perslistingsection', arguments: PerslistingParams(id: value,name: name));
+    Get.toNamed('/onboardfourth', arguments: PerslistingParams(id: value,name: name));
   }
 }

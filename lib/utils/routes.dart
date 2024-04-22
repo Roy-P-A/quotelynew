@@ -5,6 +5,7 @@ import '../features/categories/categories_screen.dart';
 import '../features/favourites/favourites.dart';
 import '../features/forgotpassword/forgotpassword.dart';
 import '../features/onboardfirst/onboardfirst_screen.dart';
+import '../features/onboardfourth/onboardfourth_screen.dart';
 import '../features/onboardsecond/onboardsecond_screen.dart';
 import '../features/onboardthird/onboardthird_screen.dart';
 import '../features/perlistingsection/perlistingsection.dart';
@@ -90,5 +91,12 @@ List<GetPage> routes() => [
         GetPage(
           name: "/onboardthird",
           page: () => const OnBoardThirdScreen(),
+          transition: Transition.cupertino), 
+        GetPage(
+          name: "/onboardfourth",
+          page: () => const OnboardFourthScreen(),
           transition: Transition.cupertino),  
+
+
+          
     ];
