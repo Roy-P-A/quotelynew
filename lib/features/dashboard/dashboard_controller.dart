@@ -69,17 +69,17 @@ class DashboardController extends GetxController with SnackbarMixin {
   final _quoteList1 = Rx<QuoteFetchingModel?>(null);
   QuoteFetchingModel? get quoteList1 => _quoteList1.value;
 
-  final _quoteList2 = (List<QuoteListModel>.empty()).obs;
-  List<QuoteListModel> get quotelist2 => _quoteList2;
+  final _quoteList2 = (List<QuoteListModel1>.empty()).obs;
+  List<QuoteListModel1> get quotelist2 => _quoteList2;
 
   final _quoteListInStringFormat = "".obs;
   String get quoteListInStringFormat => _quoteListInStringFormat.value;
 
-  final _quoteList3 = (List<QuoteListModel>.empty()).obs;
-  List<QuoteListModel> get quoteList3 => _quoteList3;
+  final _quoteList3 = (List<QuoteListModel1>.empty()).obs;
+  List<QuoteListModel1> get quoteList3 => _quoteList3;
 
-  final Set<QuoteListModel> _readedquoteList3 = <QuoteListModel>{}.obs;
-  Set<QuoteListModel> get readedquoteList3 => _readedquoteList3;
+  final Set<QuoteListModel1> _readedquoteList3 = <QuoteListModel1>{}.obs;
+  Set<QuoteListModel1> get readedquoteList3 => _readedquoteList3;
 
   final _readedquoteListSending = (List<int>.empty()).obs;
   List<int> get readedquoteListSending => _readedquoteListSending;
@@ -159,10 +159,9 @@ class DashboardController extends GetxController with SnackbarMixin {
 
     debugPrint("chin${readedquoteList3}");
 
-    if (readedquoteList3.length > 2) {
-      
+    if (readedquoteList3.length > 10) {
       _readedquoteListSending.clear();
-      List<QuoteListModel> tempList = readedquoteList3.toList();
+      List<QuoteListModel1> tempList = readedquoteList3.toList();
       _readedquoteList3.clear();
       for (int i = 0; i < tempList.length; i++) {
         _readedquoteListSending.value.add(int.parse(tempList[i].id));
@@ -399,8 +398,19 @@ class DashboardController extends GetxController with SnackbarMixin {
     showRewardedAd(func1, func1);
   }
 
-  void heartToggleExpanded() {
-    isHeartIconChanged.toggle();
+  heartToggleExpanded() {
+    //debugPrint(quoteList3[pageIndex].isFavourite.toString());
+    if (quoteList3[pageIndex].isFavourite == true) {
+      debugPrint("before${quoteList3[pageIndex].isFavourite.toString()}");
+      _quoteList3[pageIndex].isFavourite = false;
+      debugPrint("after${quoteList3[pageIndex].isFavourite.toString()}");
+      update();
+    } else {
+      debugPrint("before2${quoteList3[pageIndex].isFavourite.toString()}");
+      _quoteList3[pageIndex].isFavourite = true;
+      debugPrint("after2${quoteList3[pageIndex].isFavourite.toString()}");
+      update();
+    }
   }
 
   saveQuotesApiCall() async {
@@ -415,8 +425,8 @@ class DashboardController extends GetxController with SnackbarMixin {
         List<Map<String, dynamic>> jsonList = List<Map<String, dynamic>>.from(
             json.decode(quoteListInStringFormat));
 
-        List<QuoteListModel> quoteList = jsonList
-            .map((jsonMap) => QuoteListModel.fromJson(jsonMap))
+        List<QuoteListModel1> quoteList = jsonList
+            .map((jsonMap) => QuoteListModel1.fromJson(jsonMap))
             .toList();
         _quoteList3.value = quoteList;
       }
@@ -432,8 +442,8 @@ class DashboardController extends GetxController with SnackbarMixin {
       List<Map<String, dynamic>> jsonList =
           List<Map<String, dynamic>>.from(json.decode(quoteListInStringFormat));
 
-      List<QuoteListModel> quoteList =
-          jsonList.map((jsonMap) => QuoteListModel.fromJson(jsonMap)).toList();
+      List<QuoteListModel1> quoteList =
+          jsonList.map((jsonMap) => QuoteListModel1.fromJson(jsonMap)).toList();
       _quoteList3.value = quoteList;
     }
   }
@@ -456,10 +466,10 @@ class DashboardController extends GetxController with SnackbarMixin {
         if (quoteList1 != null) {
           for (int i = 0; i < quoteList1!.content.length; i++) {
             _quoteList2.add(
-              QuoteListModel(
-                id: quoteList1!.content[i].quotesId,
-                quote: quoteList1!.content[i].quoteDescription,
-              ),
+              QuoteListModel1(
+                  id: quoteList1!.content[i].quotesId,
+                  quote: quoteList1!.content[i].quoteDescription,
+                  isFavourite: false),
             );
           }
           await saveQuotesApiCall();

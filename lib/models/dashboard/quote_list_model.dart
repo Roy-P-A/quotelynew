@@ -25,12 +25,11 @@ class QuoteListModel {
 
 class QuoteListModel1 {
   String id;
-
   String quote;
-  bool isRead;
+  bool isFavourite ;
 
   QuoteListModel1(
-      {required this.id, required this.quote, required this.isRead});
+      {required this.id, required this.quote,  this.isFavourite = false});
 
       
 
@@ -38,7 +37,7 @@ class QuoteListModel1 {
     return {
       'id': id,
       'quote': quote,
-      'isRead': isRead,
+      'isFavourite': isFavourite,
     };
   }
 
@@ -48,7 +47,7 @@ class QuoteListModel1 {
     return QuoteListModel1(
       id: jsonMap['id'],
       quote: jsonMap['quote'],
-      isRead: jsonMap['isRead'],
+      isFavourite: jsonMap['isFavourite'],
     );
   }  
 }
