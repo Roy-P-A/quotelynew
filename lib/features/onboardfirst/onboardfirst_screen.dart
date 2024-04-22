@@ -68,7 +68,7 @@ class OnboardfirstScreen extends StatelessWidget {
               floatingActionButtonLocation:
                   FloatingActionButtonLocation.centerDocked,
               floatingActionButton: Container(
-                margin: const EdgeInsets.all(20),
+                margin: const EdgeInsets.fromLTRB(20, 20, 20, 0),
                 width: double.infinity,
                 height: 200,
                 child: Column(
@@ -98,7 +98,7 @@ class OnboardfirstScreen extends StatelessWidget {
                     ),
                     GestureDetector(
                       onTap: () {
-                        Get.offAllNamed("");
+                        Get.offAllNamed("/onboardsecond");
                       },
                       child: Container(
                         padding: const EdgeInsets.all(12.0),

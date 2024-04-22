@@ -5,6 +5,7 @@ import '../features/categories/categories_screen.dart';
 import '../features/favourites/favourites.dart';
 import '../features/forgotpassword/forgotpassword.dart';
 import '../features/onboardfirst/onboardfirst_screen.dart';
+import '../features/onboardsecond/onboardsecond_screen.dart';
 import '../features/perlistingsection/perlistingsection.dart';
 import '../features/perslisting/perslisting.dart';
 import '../features/perssubsection/perssubsection.dart';
@@ -80,5 +81,9 @@ List<GetPage> routes() => [
        GetPage(
           name: "/onboardfirst",
           page: () => const OnboardfirstScreen(),
+          transition: Transition.cupertino),
+        GetPage(
+          name: "/onboardsecond",
+          page: () => const OnboardSecondScreen(),
           transition: Transition.cupertino),
     ];
