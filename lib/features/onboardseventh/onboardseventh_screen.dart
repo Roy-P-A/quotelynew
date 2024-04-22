@@ -28,27 +28,8 @@ class OnBoardSeventhScreen extends StatelessWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      AppBar(
-                        backgroundColor: Colors.transparent,
-                        leading: GestureDetector(
-                          onTap: () {
-                            Get.back();
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.all(18),
-                            width: 10,
-                            height: 10,
-                            child: SvgPicture.asset(
-                              "assets/svgs/images/profile/arrow.svg",
-                              height: 10,
-                              width: 10,
-                            ),
-                          ),
-                        ),
-                        title: const Text(
-                          '',
-                          style: TextStyle(color: Colors.white),
-                        ),
+                      const SizedBox(
+                        height: 60,
                       ),
                       Padding(
                         padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
@@ -153,7 +134,9 @@ class OnBoardSeventhScreen extends StatelessWidget {
                 child: Column(
                   children: [
                        GestureDetector(
-                      onTap: () {},
+                      onTap: () {
+                        Get.offAllNamed("/dashboard");
+                      },
                       child: Container(
                         width: double.infinity,
                         height: 45,
