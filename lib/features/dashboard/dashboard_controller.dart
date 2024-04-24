@@ -159,7 +159,7 @@ class DashboardController extends GetxController with SnackbarMixin {
 
     debugPrint("chin${readedquoteList3}");
 
-    if (readedquoteList3.length > 10) {
+    if (readedquoteList3.length > 20) {
       _readedquoteListSending.clear();
       List<QuoteListModel1> tempList = readedquoteList3.toList();
       _readedquoteList3.clear();
