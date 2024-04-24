@@ -42,10 +42,10 @@ class QuoteSection extends StatelessWidget {
             // PageController(
             //     initialPage: 0, keepPage: true, viewportFraction: 1),
             physics: const BouncingScrollPhysics(),
-            itemCount: controller.quotelist.length,
+            itemCount: controller.quoteList3.length,
 
             itemBuilder: (context, index) {
-              controller.pinu(index);
+              controller.indexNotifying(index);
               return oneQuotePageSection(
                   context, index, controller, screenChange);
             }),
@@ -62,7 +62,7 @@ class QuoteSection extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              controller.quotelist[controller.pageIndex].quote,
+              controller.quoteList3[controller.pageIndex].quote,
               textAlign: TextAlign.center,
               style: TextStyle(
                   fontSize: 24,
@@ -74,10 +74,10 @@ class QuoteSection extends StatelessWidget {
             const SizedBox(
               height: 10,
             ),
-            screenChange == true
+            controller.isModified == false
                 ? CustomFabButton(controller: controller)
                 : const SizedBox(),
-            screenChange == true
+            controller.isModified == false
                 ? const SizedBox()
                 : Container(
                     child: SvgPicture.asset(

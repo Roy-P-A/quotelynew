@@ -172,6 +172,7 @@ class SignUpController extends GetxController with SnackbarMixin {
         await defaultSettings(apikey,userid);
         await showSuccessSnackbar(title: "Success", message: "User successfully created");    
         await Future.delayed(const Duration(seconds: 2));
+        //await Get.offAllNamed('/onboardfirst');
         await Get.offAllNamed('/dashboard');
       } else {
          showErrorSnackbar(title: "Error", message: "Some error occured");

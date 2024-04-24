@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-
+import 'package:loading_overlay/loading_overlay.dart';
 
 import 'dashboard.dart';
 import 'sections/background_image.dart';
@@ -30,15 +30,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Obx(
-        () => SizedBox(
-          height: double.infinity,
-          width: double.infinity,
-          child: Stack(
-            children: [
-              RepaintBoundary(
-                  key: controller.key, child: duplicateWidget(controller)),
-              originalWidget(controller),
-            ],
+        () => LoadingOverlay(
+          isLoading: controller.isLoadingShare,
+          opacity: 0.1,
+          color: Colors.transparent,
+          progressIndicator: const CircularProgressIndicator(),
+          child: SizedBox(
+            height: double.infinity,
+            width: double.infinity,
+            child: Stack(
+              children: [
+                RepaintBoundary(
+                    key: controller.key, child: originalWidget(controller)),
+              ],
+            ),
           ),
         ),
       ),
@@ -46,7 +51,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Widget originalWidget(DashboardController controller) {
-    return Obx(()=>Stack(
+    return Stack(
       children: [
         controller.fetchedBackgroundSettings != null
             ? BackgroundImage(
@@ -66,56 +71,29 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       screenChange: true,
                     )
                   : const SizedBox(),
-              Positioned(
-                right: 20,
-                bottom: 20,
-                child: CustomButton6(
-                  controller: controller,
-                ),
-              ),
-              Positioned(
-                left: 20,
-                bottom: 20,
-                child: CustomButtonNew(
-                  iconLink: "assets/svgs/images/dashboard/google.svg",
-                  pageRoute: '/profile',
-                  controller: controller,
-                ),
-              ),
+              controller.isModified
+                  ? const SizedBox()
+                  : Positioned(
+                      right: 20,
+                      bottom: 20,
+                      child: CustomButton6(
+                        controller: controller,
+                      ),
+                    ),
+              controller.isModified
+                  ? const SizedBox()
+                  : Positioned(
+                      left: 20,
+                      bottom: 20,
+                      child: CustomButtonNew(
+                        iconLink: "assets/svgs/images/dashboard/google.svg",
+                        pageRoute: '/profile',
+                        controller: controller,
+                      ),
+                    ),
             ],
           ),
         ),
-      ],
-    ),);
-  }
-
-  Widget duplicateWidget(DashboardController controller) {
-    return Stack(
-      children: [
-        controller.fetchedBackgroundSettings != null
-            ? BackgroundImage(
-                controller: controller,
-              )
-            : Container(
-                width: double.infinity,
-                height: double.infinity,
-                color: Colors.black,
-              ),
-        Obx(()=>SafeArea(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              controller.fetchedBackgroundSettings != null
-                  ? Expanded(
-                      child: QuoteSection(
-                        controller: controller,
-                        screenChange: false,
-                      ),
-                    )
-                  : const Expanded(child: SizedBox()),
-            ],
-          ),
-        )),
       ],
     );
   }

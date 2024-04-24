@@ -22,12 +22,22 @@ class CustomFabButton extends StatelessWidget {
           const SizedBox(
             width: 12,
           ),
+
           CustomButton5(
-            iconLink: controller.isHeartIconChanged.value
+            iconLink: controller.quoteList3[controller.pageIndex].isFavourite
                 ? "assets/svgs/images/dashboard/filled_heart.svg"
                 : "assets/svgs/images/dashboard/heart.svg",
-            customFunction: () => controller.heartToggleExpanded(),
+            customFunction: () {
+              debugPrint(controller.quoteList3[controller.pageIndex].isFavourite.toString());
+              controller.heartToggleExpanded();},
           ),
+
+          // CustomButton5(
+          //   iconLink: controller.isHeartIconChanged.value
+          //       ? "assets/svgs/images/dashboard/filled_heart.svg"
+          //       : "assets/svgs/images/dashboard/heart.svg",
+          //   customFunction: () => controller.heartToggleExpanded(),
+          // ),
         ],
       ),
     );

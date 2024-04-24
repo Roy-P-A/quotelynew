@@ -1,8 +1,14 @@
-import 'package:get/get.dart';
+import 'dart:io';
+import 'dart:typed_data';
 
-import '../perlistingsection/widgets/abstractlist.dart';
-import '../perlistingsection/widgets/colorsList.dart';
-import '../perlistingsection/widgets/fontlist.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/widgets.dart';
+import 'package:get/get.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
+
+import 'dart:ui' as ui;
+import 'package:image/image.dart' as img;
 
 class FavouritesModel {
   String id;
@@ -20,13 +26,17 @@ class FavouritesModel {
 }
 
 class FavouritesController extends GetxController {
-  String quote = "Your daily motivational quote";
-
   final _favourites = List<FavouritesModel>.empty(growable: true).obs;
   List<FavouritesModel> get favourites => _favourites;
 
   final _idvalue = 0.obs;
   int get idvalue => _idvalue.value;
+
+  final _isLoadingShare = false.obs;
+  bool get isLoadingShare => _isLoadingShare.value;
+
+  final _isModified = false.obs;
+  bool get isModified => _isModified.value;
 
   @override
   void onInit() async {
@@ -35,33 +45,91 @@ class FavouritesController extends GetxController {
     await fetchingdata();
   }
 
-  fetchingdata() {
-    _favourites.clear();
-    int fontListLength = FontList().fontList.length;
-    if (idvalue == 0) {
-      for (int i = 0; i < ColorList().colorList.length; i++) {
-        int fontIndex = i % fontListLength;
-        _favourites.add(
-          FavouritesModel(
-              id: ColorList().colorList[i].id,
-              image: ColorList().colorList[i].image,
-              fontFamily: FontList().fontList[fontIndex].fontfamily,
-              quote: quote,
-              isSelected: ColorList().colorList[i].isSelected),
-        );
+  fetchingdata() {}
+
+  shareImageToSocialMedia1(GlobalKey key) async {
+    _isLoadingShare.value = true;
+    _isModified.value = true;
+   // update();
+    await Future.delayed(const Duration(seconds: 2));
+    
+    final RenderRepaintBoundary boundary =
+        key.currentContext!.findRenderObject() as RenderRepaintBoundary;
+
+    final ui.Image image = await boundary.toImage(pixelRatio: 3.0);
+    final ByteData? byteData =
+        await image.toByteData(format: ui.ImageByteFormat.png);
+    final Uint8List pngBytes = byteData!.buffer.asUint8List();
+
+    final tempDir = await getTemporaryDirectory();
+    final tempPath = '${tempDir.path}/screenshot.png';
+    File(tempPath).writeAsBytesSync(pngBytes);
+
+    try {
+      final result = await Share.shareXFiles([XFile(tempPath)],
+          text: 'motivational quotes');
+      _isLoadingShare.value = false;
+      if (result.status == ShareResultStatus.success) {
+        _isModified.value = false;
+        _isLoadingShare.value = false;
+        update();
       }
-    } else {
-      for (int i = 0; i < ColorList().colorList.length; i++) {
-        int fontIndex = i % fontListLength;
-        _favourites.add(
-          FavouritesModel(
-              id: AbstractList().abstractList[i].id,
-              image: AbstractList().abstractList[i].image,
-              fontFamily: FontList().fontList[fontIndex].fontfamily,
-              quote: quote,
-              isSelected: AbstractList().abstractList[i].isSelected),
-        );
+      if (result.status == ShareResultStatus.dismissed) {
+        _isModified.value = false;
+        _isLoadingShare.value = false;
+        update();
       }
+    } catch (e) {
+      print('Error sharing image: $e');
+      _isLoadingShare.value = false;
+      _isModified.value = false;
+      update();
     }
   }
+
+  List<FavouriteListModel> favouriteList = [
+    FavouriteListModel(
+        backgroundId: "1",
+        backgroundImage: "assets/images/categories/happiness.png",
+        fontFamilyId: "1",
+        fontFamily: "Caveat",
+        fontColorId: "1",
+        fontColor: 0xffF4A261,
+        quoteId: "1",
+        quote: "God Is Love",
+        isSelected: true),
+    FavouriteListModel(
+        backgroundId: "2",
+        backgroundImage: "assets/images/categories/productivity.png",
+        fontFamilyId: "2",
+        fontFamily: "JosefinSans",
+        fontColorId: "2",
+        fontColor: 0xff94D2BD,
+        quoteId: "2",
+        quote: "The way to success is smartwork",
+        isSelected: true),
+  ];
+}
+
+class FavouriteListModel {
+  String backgroundId;
+  String backgroundImage;
+  String fontFamilyId;
+  String fontFamily;
+  String fontColorId;
+  int fontColor;
+  String quoteId;
+  String quote;
+  bool isSelected;
+
+  FavouriteListModel(
+      {required this.backgroundId,
+      required this.backgroundImage,
+      required this.fontFamilyId,
+      required this.fontFamily,
+      required this.fontColorId,
+      required this.fontColor,
+      required this.quoteId,
+      required this.quote,
+      this.isSelected = true});
 }

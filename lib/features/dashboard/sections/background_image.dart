@@ -16,7 +16,7 @@ class BackgroundImage extends StatelessWidget {
         width: double.infinity,
         height: double.infinity,
         child: FittedBox(
-          fit: BoxFit.fitHeight,
+          fit: BoxFit.fitWidth,
           child: Image.memory(
             base64Decode(controller.fetchedBackgroundSettings!.image),
             filterQuality: FilterQuality.high,

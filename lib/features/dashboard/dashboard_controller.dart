@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -65,17 +66,23 @@ class DashboardController extends GetxController with SnackbarMixin {
   final _quoteList = (List<QuoteListModel>.empty()).obs;
   List<QuoteListModel> get quotelist => _quoteList;
 
-  // final _quoteList1 = (List<QuoteListModel1>.empty()).obs;
-  // List<QuoteListModel> get quotelist1 => _quoteList;
-
-  // final _quoteList1 = (List<QuoteListModel1>.empty()).obs;
-  // List<QuoteListModel> get quotelist1 => _quoteList;
-
   final _quoteList1 = Rx<QuoteFetchingModel?>(null);
   QuoteFetchingModel? get quoteList1 => _quoteList1.value;
 
   final _quoteList2 = (List<QuoteListModel1>.empty()).obs;
   List<QuoteListModel1> get quotelist2 => _quoteList2;
+
+  final _quoteListInStringFormat = "".obs;
+  String get quoteListInStringFormat => _quoteListInStringFormat.value;
+
+  final _quoteList3 = (List<QuoteListModel1>.empty()).obs;
+  List<QuoteListModel1> get quoteList3 => _quoteList3;
+
+  final Set<QuoteListModel1> _readedquoteList3 = <QuoteListModel1>{}.obs;
+  Set<QuoteListModel1> get readedquoteList3 => _readedquoteList3;
+
+  final _readedquoteListSending = (List<int>.empty()).obs;
+  List<int> get readedquoteListSending => _readedquoteListSending;
 
   final _totalPages = 0.obs;
   int get totalPages => _totalPages.value;
@@ -107,6 +114,12 @@ class DashboardController extends GetxController with SnackbarMixin {
   final _isBannerChecker1 = 0.obs;
   int get isBannerChecker1 => _isBannerChecker1.value;
 
+  final _isModified = false.obs;
+  bool get isModified => _isModified.value;
+
+  final _isLoadingShare = false.obs;
+  bool get isLoadingShare => _isLoadingShare.value;
+
   @override
   void onInit() async {
     await initFunction();
@@ -116,10 +129,9 @@ class DashboardController extends GetxController with SnackbarMixin {
   initFunction() async {
     await fetchingUserCredentials();
     await getGlobalSettingsUser();
+    await getQuoteListFromSavedApi();
     await quotesApiCall();
 
-    _quoteList.value = QuoteList().quoteList;
-    //createInterstitialAd();
     createRewardedAd();
     update();
   }
@@ -132,8 +144,32 @@ class DashboardController extends GetxController with SnackbarMixin {
     super.onClose();
   }
 
-  pinu(index) {
+  @override
+  void dispose() {
+    rewardedAd?.dispose();
+    super.dispose();
+  }
+
+  indexNotifying(index) async {
     _pageIndex.value = index;
+
+    if (!_readedquoteList3.contains(quoteList3[index])) {
+      _readedquoteList3.add(quoteList3[index]);
+    }
+
+    debugPrint("chin${readedquoteList3}");
+
+    if (readedquoteList3.length > 20) {
+      _readedquoteListSending.clear();
+      List<QuoteListModel1> tempList = readedquoteList3.toList();
+      _readedquoteList3.clear();
+      for (int i = 0; i < tempList.length; i++) {
+        _readedquoteListSending.value.add(int.parse(tempList[i].id));
+      }
+      debugPrint("tipper${readedquoteListSending}");
+      await quotesApiCall();
+      await getQuoteListFromSavedApi();
+    }
   }
 
   fetchingUserCredentials() async {
@@ -183,54 +219,6 @@ class DashboardController extends GetxController with SnackbarMixin {
   }
 
   //---ad related---start
-
-  // void createInterstitialAd() {
-  //   InterstitialAd.load(
-  //     adUnitId: 'ca-app-pub-3940256099942544/1033173712',
-  //     request: const AdRequest(),
-  //     adLoadCallback: InterstitialAdLoadCallback(
-  //       onAdLoaded: (ad) {
-  //         debugPrint('$ad loaded.');
-
-  //         interstitialAd = ad;
-  //       },
-  //       onAdFailedToLoad: (error) {
-  //         debugPrint('InterstitialAd failed to load: $error');
-  //         // createInterstitialAd();
-  //       },
-  //     ),
-  //   );
-  // }
-
-  // void showInterstitialAd(VoidCallback func1) async {
-  //   if (interstitialAd != null) {
-  //     interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
-  //       onAdShowedFullScreenContent: (ad) {
-  //         debugPrint('$ad onAdShowedFullScreenContent.');
-  //         //throw Exception("Condition is satisfied, disrupting flow.");
-  //       },
-  //       onAdDismissedFullScreenContent: (ad) {
-  //         debugPrint('$ad onAdDismissedFullScreenContent.');
-  //         debugPrint('manu');
-  //         ad.dispose();
-  //         createInterstitialAd();
-  //         func1();
-  //         debugPrint('manu1');
-
-  //         return;
-  //       },
-  //       onAdFailedToShowFullScreenContent: (ad, error) {
-  //         debugPrint('$ad onAdFailedToShowFullScreenContent: $error');
-  //         ad.dispose();
-  //         createInterstitialAd();
-  //       },
-  //       onAdImpression: (ad) => debugPrint('$ad impression occurred.'),
-  //     );
-  //     interstitialAd!.show();
-  //   } else {
-  //     debugPrint('Interstitial ad not yet loaded.');
-  //   }
-  // }
 
   void createRewardedAd() {
     RewardedAd.load(
@@ -341,6 +329,7 @@ class DashboardController extends GetxController with SnackbarMixin {
   }
 
   void shareButton(BuildContext context) async {
+    _isModified.value = true;
     await beforeButton(context, shareImageToSocialMedia);
     shareImageToSocialMedia();
   }
@@ -351,6 +340,8 @@ class DashboardController extends GetxController with SnackbarMixin {
   }
 
   shareImageToSocialMedia() async {
+    _isLoadingShare.value = true;
+    await Future.delayed(const Duration(seconds: 1));
     final RenderRepaintBoundary boundary =
         _key.currentContext!.findRenderObject() as RenderRepaintBoundary;
 
@@ -359,22 +350,36 @@ class DashboardController extends GetxController with SnackbarMixin {
         await image.toByteData(format: ui.ImageByteFormat.png);
     final Uint8List pngBytes = byteData!.buffer.asUint8List();
 
-    img.Image imgImage = img.decodeImage(pngBytes)!;
+    // img.Image imgImage = img.decodeImage(pngBytes)!;
 
-    // Resize the image to reduce its size
-    img.Image resizedImage = img.copyResize(imgImage, width: 500);
+    // // Resize the image to reduce its size
+    // img.Image resizedImage = img.copyResize(imgImage, width: 800);
 
-    // Compress the image to reduce file size
-    Uint8List compressedBytes = img.encodeJpg(resizedImage, quality: 80);
+    // // Compress the image to reduce file size
+    // Uint8List compressedBytes = img.encodeJpg(resizedImage, quality: 100);
 
     final tempDir = await getTemporaryDirectory();
     final tempPath = '${tempDir.path}/screenshot.png';
+    File(tempPath).writeAsBytesSync(pngBytes);
     //File(tempPath).writeAsBytesSync(img.encodePng(imgImage));
-    File(tempPath).writeAsBytesSync(compressedBytes);
+    //File(tempPath).writeAsBytesSync(compressedBytes);
     try {
-      await Share.shareFiles([tempPath], text: 'motivational quotes');
+      final result = await Share.shareXFiles([XFile(tempPath)],
+          text: 'motivational quotes');
+      _isLoadingShare.value = false;
+      if (result.status == ShareResultStatus.success) {
+        _isModified.value = false;
+        update();
+      }
+      if (result.status == ShareResultStatus.dismissed) {
+        _isModified.value = false;
+        update();
+      }
     } catch (e) {
       print('Error sharing image: $e');
+      _isLoadingShare.value = false;
+      _isModified.value = false;
+      update();
     }
   }
 
@@ -389,33 +394,58 @@ class DashboardController extends GetxController with SnackbarMixin {
   }
 
   loadAdd(VoidCallback func1) async {
-    // createInterstitialAd();
-    // showInterstitialAd(func1);
-
     createRewardedAd();
     showRewardedAd(func1, func1);
   }
 
-  void heartToggleExpanded() {
-    isHeartIconChanged.toggle();
+  heartToggleExpanded() {
+    //debugPrint(quoteList3[pageIndex].isFavourite.toString());
+    if (quoteList3[pageIndex].isFavourite == true) {
+      debugPrint("before${quoteList3[pageIndex].isFavourite.toString()}");
+      _quoteList3[pageIndex].isFavourite = false;
+      debugPrint("after${quoteList3[pageIndex].isFavourite.toString()}");
+      update();
+    } else {
+      debugPrint("before2${quoteList3[pageIndex].isFavourite.toString()}");
+      _quoteList3[pageIndex].isFavourite = true;
+      debugPrint("after2${quoteList3[pageIndex].isFavourite.toString()}");
+      update();
+    }
   }
 
-  saveQuotesApiCall() {
-    //   if ((fetchedBackgroundSettings0 != null)) {
-    //   String jsonString = json.encode(fetchedBackgroundSettings0!.toJson());
-    //   await qtSharedPreferences.savebackgroundSettings1(jsonString);
-    //   await getGlobalSettingsUserPreferences();
-    //   update();
-    // } else {}
-
+  saveQuotesApiCall() async {
     if ((quotelist2.isNotEmpty)) {
       String jsonString =
           json.encode(quotelist2.map((quote) => quote.toJson()).toList());
-      debugPrint("tinup${jsonString}");
-      // await qtSharedPreferences.savebackgroundSettings1(jsonString);
-      // await getGlobalSettingsUserPreferences();
+
+      await qtSharedPreferences.savequotesList(jsonString);
+      _quoteListInStringFormat.value =
+          await qtSharedPreferences.getQuoteList() ?? "";
+      if (quoteListInStringFormat != "") {
+        List<Map<String, dynamic>> jsonList = List<Map<String, dynamic>>.from(
+            json.decode(quoteListInStringFormat));
+
+        List<QuoteListModel1> quoteList = jsonList
+            .map((jsonMap) => QuoteListModel1.fromJson(jsonMap))
+            .toList();
+        _quoteList3.value = quoteList;
+      }
+
       update();
     } else {}
+  }
+
+  getQuoteListFromSavedApi() async {
+    _quoteListInStringFormat.value =
+        await qtSharedPreferences.getQuoteList() ?? "";
+    if (quoteListInStringFormat != "") {
+      List<Map<String, dynamic>> jsonList =
+          List<Map<String, dynamic>>.from(json.decode(quoteListInStringFormat));
+
+      List<QuoteListModel1> quoteList =
+          jsonList.map((jsonMap) => QuoteListModel1.fromJson(jsonMap)).toList();
+      _quoteList3.value = quoteList;
+    }
   }
 
   quotesApiCall() async {
@@ -428,7 +458,7 @@ class DashboardController extends GetxController with SnackbarMixin {
         sortBy: 'id',
         apikey: apikey,
         userid: user_id,
-        readedList: [],
+        readedList: readedquoteListSending,
       );
       final response = await ApiRepository.to.quotesFetching(request: request);
       if (response.status == 200) {
@@ -437,13 +467,12 @@ class DashboardController extends GetxController with SnackbarMixin {
           for (int i = 0; i < quoteList1!.content.length; i++) {
             _quoteList2.add(
               QuoteListModel1(
-                id: quoteList1!.content[i].quotesId,
-                quote: quoteList1!.content[i].quoteDescription,
-                isRead: false,
-              ),
+                  id: quoteList1!.content[i].quotesId,
+                  quote: quoteList1!.content[i].quoteDescription,
+                  isFavourite: false),
             );
           }
-          //await saveQuotesApiCall();
+          await saveQuotesApiCall();
         }
       } else {
         _isLoading.value = false;
