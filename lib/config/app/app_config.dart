@@ -98,7 +98,7 @@ class QTAppConfigManager {
 
   static QTAppConfig _getProdConfig() {
     return QTAppConfig(
-        backendBaseURL: "164.52.200.24:4321",
+        backendBaseURL: "13.200.132.41:4321",
         serviceUrl: "quotely-service",
         httpScheme: "http",
         //firebaseoptions
@@ -119,15 +119,15 @@ class QTAppConfigManager {
             : "ca-app-pub-3940256099942544/5224354917",
 
         //default section
-        defaultuserId: "2",
-        defaultfirstName: "default",
+        defaultuserId: "1",
+        defaultfirstName: "Default",
         defaultlastName: "user",
         defaultemail: "roypamechbc@gmail.com",
         defaultrole: "USER",
-        defaultapikey: "7cc1cd6b5beb4a30b5129c81c6d1dada",
+        defaultapikey: "2a6d09f3d0964f6589f01277682c3890",
         defaultpaymentEndDate: "",
         //default section1
-        defaultbackgroundimageId: 4,
+        defaultbackgroundimageId: 9,
         defaultfontfamilyId: 1,
         defaultfontColorId: 1);
   }
