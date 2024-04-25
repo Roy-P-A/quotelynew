@@ -70,7 +70,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       controller: controller,
                       screenChange: true,
                     )
-                  : const SizedBox(),
+                  : const SizedBox(
+                    height: double.infinity,
+                    width: double.infinity,
+                  ),
               controller.isModified
                   ? const SizedBox()
                   : Positioned(
