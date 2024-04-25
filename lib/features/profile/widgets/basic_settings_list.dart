@@ -14,9 +14,9 @@ class BasicSettingsList {
         icon: "assets/svgs/images/profile/category.svg",
         stringText: "Categories",
         routeLink: "/categories"),
-    BasicSettingsListModel(
-        icon: "assets/svgs/images/profile/notification1.svg",
-        stringText: "Widgets and Notifications",
-        routeLink: "/notifications"),
+    // BasicSettingsListModel(
+    //     icon: "assets/svgs/images/profile/notification1.svg",
+    //     stringText: "Widgets and Notifications",
+    //     routeLink: "/notifications"),
   ];
 }

@@ -217,8 +217,8 @@ class ProfileController extends GetxController {
     if (isBannerChecker1 == 2) {
       Get.toNamed(routeLink);
     } else if (isBannerChecker1 == 1) {
-      //loadAdd(routeLink);
-      Get.toNamed(routeLink);
+      loadAdd(routeLink);
+      //Get.toNamed(routeLink);
     } else {
       showPopup(context);
     }
