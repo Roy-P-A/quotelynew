@@ -62,7 +62,7 @@ class QTAppConfig {
 class QTAppConfigManager {
   static QTAppConfig _getDevConfig() {
     return QTAppConfig(
-        backendBaseURL: "13.200.132.41:4321",
+        backendBaseURL: "192.168.29.159:4321",
         serviceUrl: "quotely-service",
         httpScheme: "http",
         //firebaseoptions
