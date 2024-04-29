@@ -188,27 +188,63 @@ class SignInController extends GetxController with SnackbarMixin {
     }
   }
 
+  // signUpAsGuest() async {
+  //   final qtSharedPreferences = QTSharedPreferences();
+  //   String userid = QTAppConfigManager.config.defaultuserId;
+  //   String firstName = QTAppConfigManager.config.defaultfirstName;
+  //   String lastName = QTAppConfigManager.config.defaultlastName;
+  //   String email = QTAppConfigManager.config.defaultemail;
+  //   String role = QTAppConfigManager.config.defaultrole;
+  //   String apikey = QTAppConfigManager.config.defaultapikey;
+  //   String paymentEndDate = QTAppConfigManager.config.defaultpaymentEndDate;
+
+  //   if (isConnected.value == false) {
+  //     showErrorSnackbar(
+  //         title: "Error", message: "Please check the internet connection");
+  //     await Future.delayed(const Duration(seconds: 2));
+  //     return;
+  //   }
+  //   await qtSharedPreferences.saveTokensToPrefs(
+  //       userid, firstName, lastName, email, role, apikey, paymentEndDate);
+  //   await Future.delayed(const Duration(seconds: 2));
+
+  //   await Get.offAllNamed('/dashboard');
+  // }
+
   signUpAsGuest() async {
-    final qtSharedPreferences = QTSharedPreferences();
-    String userid = QTAppConfigManager.config.defaultuserId;
-    String firstName = QTAppConfigManager.config.defaultfirstName;
-    String lastName = QTAppConfigManager.config.defaultlastName;
-    String email = QTAppConfigManager.config.defaultemail;
-    String role = QTAppConfigManager.config.defaultrole;
-    String apikey = QTAppConfigManager.config.defaultapikey;
-    String paymentEndDate = QTAppConfigManager.config.defaultpaymentEndDate;
+    _isLoading(true);
 
-    if (isConnected.value == false) {
-      showErrorSnackbar(
-          title: "Error", message: "Please check the internet connection");
-      await Future.delayed(const Duration(seconds: 2));
-      return;
+    try {
+      final request = LoginRequest(
+          email: "roypamechbc@gmail.com",
+          password: "Aa@12345678",
+          role: "USER");
+      final response = await ApiRepository.to.login(request: request);
+
+      if (response.status == 200) {
+        _loginResponse.value = response.data;
+        final qtSharedPreferences = QTSharedPreferences();
+        String userid = loginResponse!.userId;
+        String firstName = loginResponse!.firstName;
+        String lastName = loginResponse!.lastName;
+        String email = loginResponse!.email;
+        String role = loginResponse!.role;
+        String apikey = loginResponse!.apikey;
+        String paymentEndDate = loginResponse!.paymentEndDate ?? "";
+        debugPrint(userid);
+        await qtSharedPreferences.saveTokensToPrefs(
+            userid, firstName, lastName, email, role, apikey, paymentEndDate);
+        await _saveCredentials();
+        await Future.delayed(const Duration(seconds: 2));
+        await Get.offAllNamed('/dashboard');
+      } else {
+        // showErrorSnackbar(title: "Error", message: response.messagecall());
+        _isLoading(false);
+      }
+    } catch (e) {
+      _isLoading(false);
+      return catchErrorSection(e);
     }
-    await qtSharedPreferences.saveTokensToPrefs(
-        userid, firstName, lastName, email, role, apikey, paymentEndDate);
-    await Future.delayed(const Duration(seconds: 2));
-
-    await Get.offAllNamed('/dashboard');
   }
 
   //---
@@ -235,15 +271,13 @@ class SignInController extends GetxController with SnackbarMixin {
       debugPrint("refreshtoken: ${user.refreshToken}");
       showSuccessSnackbar(
           title: "Success", message: "You are successfully logined");
-      await Future.delayed(const Duration(seconds: 2),(){});
-      await signUpAsGuest();    
+      await Future.delayed(const Duration(seconds: 2), () {});
+      await signUpAsGuest();
     } on FirebaseAuthException catch (error) {
       debugPrint("Google Sign-In error: ${error.message}");
-      showErrorSnackbar(
-          title: "Error", message: "Google Login Failed");
+      showErrorSnackbar(title: "Error", message: "Google Login Failed");
     }
   }
-
 
 //---
   // signInWithApple() async {
@@ -267,7 +301,7 @@ class SignInController extends GetxController with SnackbarMixin {
   //   }
   // }
 
-   signInWithApple() async {
+  signInWithApple() async {
     try {
       // Perform the Apple sign-in process
       final credential = await SignInWithApple.getAppleIDCredential(
@@ -286,18 +320,15 @@ class SignInController extends GetxController with SnackbarMixin {
       // Handle the returned credential
       debugPrint('User ID: ${credential.userIdentifier}');
       debugPrint('Email: ${credential.email}');
-     
+
       debugPrint('Authorization Code: ${credential.authorizationCode}');
       debugPrint('Identity Token: ${credential.identityToken}');
       debugPrint('State: ${credential.state}');
     } catch (e) {
       // Handle errors
       debugPrint('Error during sign-in with Apple: $e');
-     
     }
   }
-
-
 
   signInWithFacebook() async {
     try {
@@ -325,19 +356,17 @@ class SignInController extends GetxController with SnackbarMixin {
         debugPrint('Name: $name');
         debugPrint('Profile Picture URL: $pictureUrl');
         showSuccessSnackbar(
-          title: "Success", message: "You are successfully logined");
-        await Future.delayed(const Duration(seconds: 2),(){});  
-        await signUpAsGuest(); 
+            title: "Success", message: "You are successfully logined");
+        await Future.delayed(const Duration(seconds: 2), () {});
+        await signUpAsGuest();
       } else {
         debugPrint('Failed');
-        showErrorSnackbar(
-          title: "Error", message: "Facebook Login Failed");
+        showErrorSnackbar(title: "Error", message: "Facebook Login Failed");
       }
     } catch (e) {
       // Handle any exceptions that occur during login
       debugPrint('Facebook login error: $e');
-      showErrorSnackbar(
-          title: "Error", message: "Facebook Login Failed");
+      showErrorSnackbar(title: "Error", message: "Facebook Login Failed");
     }
   }
 

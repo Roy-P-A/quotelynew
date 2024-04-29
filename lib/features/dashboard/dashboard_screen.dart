@@ -61,6 +61,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 width: double.infinity,
                 height: double.infinity,
                 color: Colors.black,
+                child: const Center(
+                  child: CircularProgressIndicator(
+                    color: Color(0xff744EFD),
+                  ),
+                ),
               ),
         SafeArea(
           child: Stack(
@@ -70,7 +75,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       controller: controller,
                       screenChange: true,
                     )
-                  : const SizedBox(),
+                  : const SizedBox(
+                      height: double.infinity,
+                      width: double.infinity,
+                    ),
               controller.isModified
                   ? const SizedBox()
                   : Positioned(

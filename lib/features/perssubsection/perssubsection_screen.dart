@@ -58,7 +58,16 @@ class PersSubSectionScreen extends StatelessWidget {
                       const GlassyAppbar(),
                     ],
                   )
-                : const SizedBox(),
+                : Container(
+                    color: Colors.black,
+                    width: double.infinity,
+                    height: double.infinity,
+                    child: const Center(
+                      child: CircularProgressIndicator(
+                         color: Color(0xff744EFD),
+                      ),
+                    ),
+                  ),
             floatingActionButtonLocation:
                 FloatingActionButtonLocation.centerDocked,
             floatingActionButton: controller.isLoadingFinished &&
