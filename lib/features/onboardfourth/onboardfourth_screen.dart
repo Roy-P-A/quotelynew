@@ -33,87 +33,95 @@ class OnboardFourthScreen extends StatelessWidget {
                 child: Stack(
                   children: [
                     const CustomBackground(),
-                    controller.persListingsection.isEmpty
-                        ? const Center(
-                            child: Text(
-                              "NO DATA FOUND",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          )
-                        : Container(
-                            padding: const EdgeInsets.all(20),
-                            child: Column(
-                              children: [
-                                const SizedBox(
-                                  height: 40,
+                    Container(
+                      padding: const EdgeInsets.all(20),
+                      child: Column(
+                        children: [
+                          const SizedBox(
+                            height: 40,
+                          ),
+                          Row(
+                            children: [
+                              const Text(
+                                "2/4",
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 10),
+                              ),
+                              const SizedBox(
+                                width: 5,
+                              ),
+                              Container(
+                                height: 5,
+                                width: 150,
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withOpacity(0.3),
+                                  borderRadius: BorderRadius.circular(20),
                                 ),
-                                Row(
-                                  children: [
-                                    const Text(
-                                      "2/4",
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 10),
+                                child: Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Container(
+                                    height: 5,
+                                    width: (150 / 4) * 2,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(20),
                                     ),
-                                    const SizedBox(
-                                      width: 5,
-                                    ),
-                                    Container(
-                                      height: 5,
-                                      width: 150,
-                                      decoration: BoxDecoration(
-                                        color: Colors.white.withOpacity(0.3),
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                      child: Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: Container(
-                                          height: 5,
-                                          width: (150 / 4) * 2,
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius:
-                                                BorderRadius.circular(20),
-                                          ),
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          const Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              "Choose the look you love",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w400,
+                                fontSize: 30,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          const Align(
+                            alignment: Alignment.topLeft,
+                            child: Text(
+                              "Make quotely yours.Select a theme you love and we're done!",
+                              textAlign: TextAlign.start,
+                              style: TextStyle(
+                                color: Color(0xff8E8E8E),
+                                fontWeight: FontWeight.w400,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          controller.persListingsection.isEmpty
+                              ? const SizedBox(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      SizedBox(height: 30,),
+                                      Center(
+                                        child: Text(
+                                          "NO DATA FOUND",
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold),
                                         ),
                                       ),
-                                    )
-                                  ],
-                                ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                const Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(
-                                    "Choose the look you love",
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 30,
-                                    ),
+                                    ],
                                   ),
-                                ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                const Align(
-                                  alignment: Alignment.topLeft,
-                                  child: Text(
-                                    "Make quotely yours.Select a theme you love and we're done!",
-                                    textAlign: TextAlign.start,
-                                    style: TextStyle(
-                                      color: Color(0xff8E8E8E),
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                GridView.builder(
+                                )
+                              : Expanded(
+                                child: GridView.builder(
                                     controller: controller.scrollController,
                                     gridDelegate:
                                         const SliverGridDelegateWithFixedCrossAxisCount(
@@ -123,7 +131,7 @@ class OnboardFourthScreen extends StatelessWidget {
                                       childAspectRatio: 0.66,
                                     ),
                                     primary: false,
-                                    shrinkWrap: true,
+                                    //shrinkWrap: true,
                                     itemCount:
                                         controller.persListingsection.length,
                                     itemBuilder: (context, index) {
@@ -146,8 +154,7 @@ class OnboardFourthScreen extends StatelessWidget {
                                           ),
                                           child: Center(
                                             child: Text(
-                                              controller
-                                                  .persListingsection[index]
+                                              controller.persListingsection[index]
                                                   .quote,
                                               textAlign: TextAlign.center,
                                               style: TextStyle(
@@ -165,9 +172,10 @@ class OnboardFourthScreen extends StatelessWidget {
                                         ),
                                       );
                                     }),
-                              ],
-                            ),
-                          ),
+                              ),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),

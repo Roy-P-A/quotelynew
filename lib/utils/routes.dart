@@ -23,7 +23,7 @@ import '../features/splash/splash.dart';
 List<GetPage> routes() => [
       GetPage(
           name: "/",
-          page: () => SplashScreen(),
+          page: () => OnboardSecondScreen(),
           transition: Transition.noTransition),
       // GetPage(
       //     name: "/",
